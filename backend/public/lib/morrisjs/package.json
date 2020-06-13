@@ -37,7 +37,7 @@
   },
   "description": "Easy, pretty charts",
   "devDependencies": {
-    "bower": "1.3.8",
+    "bower": "1.8.8",
     "grunt": "~0.4.1",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-concat": "~0.3.0",
