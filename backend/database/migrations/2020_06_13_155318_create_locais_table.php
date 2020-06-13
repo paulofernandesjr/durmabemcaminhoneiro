@@ -22,7 +22,7 @@ class CreateLocaisTable extends Migration
             $table->string('logradouro');
             $table->string('complemento')->nullable();
             $table->string('numero')->nullable();
-            $table->enum('sentido', ['norte', 'sul', 'leste', 'oeste']);
+            $table->enum('sentido', ['norte', 'sul', 'leste', 'oeste', 'nordeste', 'noroeste', 'sudeste', 'sudoeste']);
             $table->string('rodovia');
             $table->string('km');
             $table->string('latitude');

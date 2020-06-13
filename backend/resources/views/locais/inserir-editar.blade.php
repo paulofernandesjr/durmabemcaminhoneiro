@@ -76,7 +76,11 @@
         <select class="form-control @error('sentido') is-invalid @enderror" name="sentido" id="sentido">
             <option value="">Selecione o sentido da via</option>
             <option value="norte" {{ (isset($local) && $local->sentido == 'norte') || old('sentido') == 'norte' ? 'selected' : '' }}>Norte</option>
+            <option value="nordeste" {{ (isset($local) && $local->sentido == 'nordeste') || old('sentido') == 'nordeste' ? 'selected' : '' }}>Nordeste</option>
+            <option value="noroeste" {{ (isset($local) && $local->sentido == 'noroeste') || old('sentido') == 'noroeste' ? 'selected' : '' }}>Noroeste</option>
             <option value="sul" {{ (isset($local) && $local->sentido == 'sul') || old('sentido') == 'sul' ? 'selected' : '' }}>Sul</option>
+            <option value="sudeste" {{ (isset($local) && $local->sentido == 'sudeste') || old('sentido') == 'sudeste' ? 'selected' : '' }}>Sudeste</option>
+            <option value="sudoeste" {{ (isset($local) && $local->sentido == 'sudoeste') || old('sentido') == 'sudoeste' ? 'selected' : '' }}>Sudoeste</option>
             <option value="leste" {{ (isset($local) && $local->sentido == 'leste') || old('sentido') == 'leste' ? 'selected' : '' }}>Leste</option>
             <option value="oeste" {{ (isset($local) && $local->sentido == 'oeste') || old('sentido') == 'oeste' ? 'selected' : '' }}>Oeste</option>
         </select>
