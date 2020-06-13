@@ -17,4 +17,11 @@ Route::group(['prefix' => 'admin'], function () {
     Auth::routes(['register' => false]);
 
     Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::resource('locais', 'LocalController', [
+        'except' => 'destroy',
+        'parameters' => [
+            'locais' => 'local'
+        ],
+    ]);
 });

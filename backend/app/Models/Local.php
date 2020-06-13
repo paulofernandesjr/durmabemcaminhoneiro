@@ -42,6 +42,11 @@ class Local extends Model
         'id', 'estado_id', 'cidade_id'
     ];
 
+    public function getCategoriaAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
     public function getValorEstadiaAttribute($value)
     {
         return str_replace('.', ',', $value);
@@ -65,6 +70,18 @@ class Local extends Model
         } else {
             $this->valor_estadia = null;
         }
+
+        return $this;
+    }
+
+    public function formataCategoria($dados)
+    {
+        $this->categoria = json_encode([
+            'durma_bem_caminhoneiro' => array_key_exists('durma_bem_caminhoneiro', $dados) ? $dados['durma_bem_caminhoneiro'] : false,
+            'apoio_ccr' => array_key_exists('apoio_ccr', $dados) ? $dados['apoio_ccr'] : false,
+            'restaurante' => array_key_exists('restaurante', $dados) ? $dados['restaurante'] : false,
+            'abastecimento' => array_key_exists('abastecimento', $dados) ? $dados['abastecimento'] : false,
+        ]);
 
         return $this;
     }

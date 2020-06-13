@@ -1,0 +1,7 @@
+.switch-button.switch-button-yesno input[type=checkbox]:checked+span label:before {
+    content: "SIM";
+}
+
+.switch-button.switch-button-yesno label:before {
+    content: "NÃO";
+}
