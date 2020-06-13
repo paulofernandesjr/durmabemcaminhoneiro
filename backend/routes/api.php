@@ -14,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/registrar', 'RegistroController@register');
 Route::get('/estados', 'EstadoController@listar');
 Route::get('/cidades/listar_por_estado', 'CidadeController@listarCidadesPorEstado');
