@@ -40,7 +40,7 @@ class LocalController extends Controller
                 unset($local->id);
                 $local->tags = json_decode($local->tags, true);
                 $local->votos = $avaliacao->votos;
-                $local->avaliacao_media = $avaliacao->avaliacao_media;
+                $local->avaliacao_media = (double) $avaliacao->avaliacao_media;
                 
                 return $local;
             })
