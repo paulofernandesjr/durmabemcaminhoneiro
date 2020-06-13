@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\Listing\LocalListing;
 use App\Http\Requests\LocalRequest;
+use App\Models\Avaliacao;
 use App\Models\Estado;
 use App\Models\Local;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class LocalController extends Controller
         return LocalListing::new()
             ->setFilters($request->all())
             ->setColumns([
+                'id',
                 'uuid',
                 'nome',
                 'estado_uf',
@@ -30,7 +32,15 @@ class LocalController extends Controller
                 'nome' => 'asc'
             ])
             ->map(function ($local) {
+                $avaliacao = Avaliacao::query()
+                    ->selectRaw('count(avaliacoes.id) as votos, (sum(avaliacoes.nota) / count(avaliacoes.id)) as avaliacao_media')
+                    ->where('local_id', $local->id)
+                    ->first();
+
+                unset($local->id);
                 $local->tags = json_decode($local->tags, true);
+                $local->votos = $avaliacao->votos;
+                $local->avaliacao_media = $avaliacao->avaliacao_media;
                 
                 return $local;
             })

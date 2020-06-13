@@ -19,3 +19,8 @@ Route::get('/estados', 'EstadoController@listar');
 Route::get('/cidades/listar_por_estado', 'CidadeController@listarCidadesPorEstado');
 
 Route::get('/locais', 'LocalController@locais');
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('/avaliar/{local}', 'AvaliacaoController@avaliar');
+});
+
