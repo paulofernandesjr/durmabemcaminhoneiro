@@ -30,7 +30,7 @@ class Motorista extends Authenticatable
         'celular',
         'data_nascimento',
         'numero_cnh',
-        'categoria_cnh',
+        'tags_cnh',
         'vencimento_cnh',
         'rntrc',
         'cep',

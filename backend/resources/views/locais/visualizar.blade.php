@@ -60,10 +60,10 @@
                                 <li>Banheiros masculinos: {{ $local->banheiros_masculinos }}</li>
                                 <li>Banheiros femininos: {{ $local->banheiros_femininos }}</li>
                                 <li>Aceita reserva: <span class="badge {{ $local->aceita_reserva ? 'badge-success' : 'badge-secondary' }}">{{ $local->aceita_reserva ? 'Sim' : 'Não' }}</span></li>
-                                <li>Durma bem caminhoneiro: <span class="badge {{ $local->categoria['durma_bem_caminhoneiro'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->categoria['durma_bem_caminhoneiro'] ? 'Sim' : 'Não' }}</span></li>
-                                <li>Apoio CCR: <span class="badge {{ $local->categoria['apoio_ccr'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->categoria['apoio_ccr'] ? 'Sim' : 'Não' }}</span></li>
-                                <li>Restaurante: <span class="badge {{ $local->categoria['restaurante'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->categoria['restaurante'] ? 'Sim' : 'Não' }}</span></li>
-                                <li>Abastecimento: <span class="badge {{ $local->categoria['abastecimento'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->categoria['abastecimento'] ? 'Sim' : 'Não' }}</span></li>
+                                <li>Durma bem caminhoneiro: <span class="badge {{ $local->tags['durma_bem_caminhoneiro'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->tags['durma_bem_caminhoneiro'] ? 'Sim' : 'Não' }}</span></li>
+                                <li>Apoio CCR: <span class="badge {{ $local->tags['apoio_ccr'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->tags['apoio_ccr'] ? 'Sim' : 'Não' }}</span></li>
+                                <li>Restaurante: <span class="badge {{ $local->tags['restaurante'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->tags['restaurante'] ? 'Sim' : 'Não' }}</span></li>
+                                <li>Abastecimento: <span class="badge {{ $local->tags['abastecimento'] ? 'badge-success' : 'badge-secondary' }}">{{ $local->tags['abastecimento'] ? 'Sim' : 'Não' }}</span></li>
                             </ul>
                         </div>
                     </div>

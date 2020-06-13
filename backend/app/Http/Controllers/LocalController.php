@@ -57,7 +57,7 @@ class LocalController extends Controller
         (new Local($request->validated()))
             ->formataAceitaReserva()
             ->formataValorEstadia()
-            ->formataCategoria($request->validated())
+            ->formataTags($request->validated())
             ->save();
 
         $request->session()->flash('success', 'O local foi cadastrado com sucesso!');
@@ -112,6 +112,7 @@ class LocalController extends Controller
         $local->fill($request->validated())
             ->formataAceitaReserva()
             ->formataValorEstadia()
+            ->formataTags($request->validated())
             ->save();
 
         $request->session()->flash('success', 'O local foi atualizado com sucesso!');

@@ -29,7 +29,7 @@ class CreateLocaisTable extends Migration
             $table->string('longitude');
             $table->boolean('aceita_reserva');
             $table->decimal('valor_estadia', 12, 2)->nullable();
-            $table->json('categoria');
+            $table->json('tags');
             $table->integer('vagas');
             $table->integer('chuveiros_masculinos');
             $table->integer('chuveiros_femininos');

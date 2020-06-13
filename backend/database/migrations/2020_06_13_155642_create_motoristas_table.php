@@ -23,7 +23,7 @@ class CreateMotoristasTable extends Migration
             $table->string('celular');
             $table->date('data_nascimento')->nullable();
             $table->string('numero_cnh')->nullable();
-            $table->string('categoria_cnh')->nullable();
+            $table->string('tags_cnh')->nullable();
             $table->date('vencimento_cnh')->nullable();
             $table->string('rntrc')->nullable();
             $table->string('cep')->nullable();

@@ -29,7 +29,7 @@ class Local extends Model
         'latitude',
         'longitude',
         'valor_estadia',
-        'categoria',
+        'tags',
         'vagas',
         'chuveiros_masculinos',
         'chuveiros_femininos',
@@ -42,7 +42,7 @@ class Local extends Model
         'id', 'estado_id', 'cidade_id'
     ];
 
-    public function getCategoriaAttribute($value)
+    public function getTagsAttribute($value)
     {
         return json_decode($value, true);
     }
@@ -74,13 +74,15 @@ class Local extends Model
         return $this;
     }
 
-    public function formataCategoria($dados)
+    public function formataTags($dados)
     {
-        $this->categoria = json_encode([
+        $this->tags = json_encode([
             'durma_bem_caminhoneiro' => array_key_exists('durma_bem_caminhoneiro', $dados) ? $dados['durma_bem_caminhoneiro'] : false,
             'apoio_ccr' => array_key_exists('apoio_ccr', $dados) ? $dados['apoio_ccr'] : false,
             'restaurante' => array_key_exists('restaurante', $dados) ? $dados['restaurante'] : false,
             'abastecimento' => array_key_exists('abastecimento', $dados) ? $dados['abastecimento'] : false,
+            'chuveiro' => array_key_exists('chuveiro', $dados) ? $dados['chuveiro'] : false,
+            'dormir' => array_key_exists('dormir', $dados) ? $dados['dormir'] : false,
         ]);
 
         return $this;

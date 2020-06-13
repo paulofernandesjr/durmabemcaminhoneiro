@@ -213,29 +213,43 @@
     <div class="form-group col-md-3">
         <label>Durma bem caminhoneiro?</label>
         <div class="switch-button switch-button-yesno">
-            <input type="checkbox" name="durma_bem_caminhoneiro" id="durma-bem-caminhoneiro" {{ (isset($local) && $local->categoria['durma_bem_caminhoneiro']) || old('durma_bem_caminhoneiro') == 'on' ? 'checked' : '' }}><span>
+            <input type="checkbox" name="durma_bem_caminhoneiro" id="durma-bem-caminhoneiro" {{ (isset($local) && $local->tags['durma_bem_caminhoneiro']) || old('durma_bem_caminhoneiro') == 'on' ? 'checked' : '' }}><span>
                 <label for="durma-bem-caminhoneiro"></label></span>
         </div>
     </div>
     <div class="form-group col-md-3">
         <label>Apoio da CCR?</label>
         <div class="switch-button switch-button-yesno">
-            <input type="checkbox" name="apoio_ccr" id="apoio-ccr" {{ (isset($local) && $local->categoria['apoio_ccr']) || old('apoio_ccr') == 'on' ? 'checked' : '' }}><span>
+            <input type="checkbox" name="apoio_ccr" id="apoio-ccr" {{ (isset($local) && $local->tags['apoio_ccr']) || old('apoio_ccr') == 'on' ? 'checked' : '' }}><span>
                 <label for="apoio-ccr"></label></span>
         </div>
     </div>
     <div class="form-group col-md-3">
         <label>Restaurante?</label>
         <div class="switch-button switch-button-yesno">
-            <input type="checkbox" name="restaurante" id="restaurante" {{ (isset($local) && $local->categoria['restaurante']) || old('restaurante') == 'on' ? 'checked' : '' }}><span>
+            <input type="checkbox" name="restaurante" id="restaurante" {{ (isset($local) && $local->tags['restaurante']) || old('restaurante') == 'on' ? 'checked' : '' }}><span>
                 <label for="restaurante"></label></span>
         </div>
     </div>
     <div class="form-group col-md-3">
         <label>Abastecimento?</label>
         <div class="switch-button switch-button-yesno">
-            <input type="checkbox" name="abastecimento" id="abastecimento" {{ (isset($local) && $local->categoria['abastecimento']) || old('abastecimento') == 'on' ? 'checked' : '' }}><span>
+            <input type="checkbox" name="abastecimento" id="abastecimento" {{ (isset($local) && $local->tags['abastecimento']) || old('abastecimento') == 'on' ? 'checked' : '' }}><span>
                 <label for="abastecimento"></label></span>
+        </div>
+    </div>
+    <div class="form-group col-md-3">
+        <label>Chuveiro?</label>
+        <div class="switch-button switch-button-yesno">
+            <input type="checkbox" name="chuveiro" id="chuveiro" {{ (isset($local) && $local->tags['chuveiro']) || old('chuveiro') == 'on' ? 'checked' : '' }}><span>
+                <label for="chuveiro"></label></span>
+        </div>
+    </div>
+    <div class="form-group col-md-3">
+        <label>Dormir?</label>
+        <div class="switch-button switch-button-yesno">
+            <input type="checkbox" name="dormir" id="dormir" {{ (isset($local) && $local->tags['dormir']) || old('dormir') == 'on' ? 'checked' : '' }}><span>
+                <label for="dormir"></label></span>
         </div>
     </div>
 </div>

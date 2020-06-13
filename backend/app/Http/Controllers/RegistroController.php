@@ -51,7 +51,7 @@ class RegistroController extends Controller
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:motoristas'],
             'data_nascimento' => ['nullable', 'date'],
             'numero_cnh' => ['nullable', 'string', 'min:11', 'max:11', 'regex:/^[0-9]+$/'],
-            'categoria_cnh' => ['nullable', 'string'],
+            'tags_cnh' => ['nullable', 'string'],
             'vencimento_cnh' => ['nullable', 'date'],
             'rntrc' => ['nullable', 'string', 'min:12', 'max:12', 'regex:/[A-Za-z]{3}-[0-9]{8}/'],
             'cep' => ['nullable', 'formato_cep'],
