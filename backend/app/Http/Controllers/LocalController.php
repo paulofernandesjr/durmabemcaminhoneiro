@@ -10,6 +10,33 @@ use Illuminate\Http\Request;
 
 class LocalController extends Controller
 {
+    public function locais(Request $request)
+    {
+        return LocalListing::new()
+            ->setFilters($request->all())
+            ->setColumns([
+                'uuid',
+                'nome',
+                'estado_uf',
+                'cidade_nome',
+                'rodovia',
+                'km',
+                'aceita_reserva',
+                'valor_estadia',
+                'tags',
+                'vagas_disponiveis'
+            ])
+            ->setOrders([
+                'nome' => 'asc'
+            ])
+            ->map(function ($local) {
+                $local->tags = json_decode($local->tags, true);
+                
+                return $local;
+            })
+            ->collect();
+    }
+    
     /**
      * Display a listing of the resource.
      *

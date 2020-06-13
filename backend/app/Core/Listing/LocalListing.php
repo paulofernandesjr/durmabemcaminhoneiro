@@ -13,17 +13,12 @@ class LocalListing extends Listing implements InterfaceListing
             'nome' => 'locais.nome',
             'estado_uf' => 'estados.uf',
             'cidade_nome' => 'cidades.nome',
-            'vagas' => 'locais.vagas',
+            'rodovia' => 'locais.rodovia',
+            'km' => 'locais.km',
+            'aceita_reserva' => 'locais.aceita_reserva',
             'valor_estadia' => 'locais.valor_estadia',
-            'bairro' => 'locais.bairro',
-            'logradouro' => 'locais.logradouro',
-            'complemento' => 'locais.complemento',
-            'numero' => 'locais.numero',
-            'banheiros_masculinos' => 'locais.banheiros_masculinos',
-            'banheiros_femininos' => 'locais.banheiros_femininos',
-            'chuveiros_masculinos' => 'locais.chuveiros_masculinos',
-            'chuveiros_femininos' => 'locais.chuveiros_femininos',
-            'aceita_reserva' => 'locais.aceita_reserva'
+            'tags' => 'locais.tags',
+            'vagas_disponiveis' => DB::raw($this->vagasDisponiveisSql())
         ];
     }
 
@@ -33,14 +28,41 @@ class LocalListing extends Listing implements InterfaceListing
             ->join('estados', 'estados.id', 'locais.estado_id')
             ->join('cidades', 'cidades.id', 'locais.cidade_id');
 
-        if ($this->getFilter('estado_id') && $this->getFilter('estado_id')) {
-            $query->where('locais.estado_id', $this->getFilter('estado_id'));
+        if ($this->hasFilter('rodovia') && $this->getFilter('rodovia')) {
+            $query->where('locais.rodovia', $this->getFilter('rodovia'));
         }
 
-        if ($this->getFilter('cidade_id') && $this->getFilter('cidade_id')) {
-            $query->where('locais.cidade_id', $this->getFilter('cidade_id'));
+        if ($this->hasFilter('sentido') && $this->getFilter('sentido')) {
+            $query->where('locais.sentido', $this->getFilter('sentido'));
+        }
+
+        if ($this->hasFilter('estado') && $this->getFilter('estado')) {
+            $query->where('estados.uf', $this->getFilter('estado'));
+        }
+
+        if ($this->hasFilter('data_chegada_em') && $this->getFilter('data_chegada_em') && 
+            $this->hasFilter('data_saida_em') && $this->getFilter('data_saida_em')
+        ) {
+            $query->where(function ($query) {
+                $query->where('aceita_reserva', false)
+                    ->orWhereRaw($this->vagasDisponiveisSql().' > 0');
+            });
         }
 
         return $query;
+    }
+
+    public function vagasDisponiveisSql()
+    {
+        $dataChegada = $this->getFilter('data_chegada_em');
+        $dataSaida = $this->getFilter('data_chegada_em');
+
+        return '(locais.vagas - (SELECT COUNT(reservas.id) FROM reservas WHERE 
+            reservas.local_id = locais.id and 
+            (
+                (data_chegada_em >= \''.$dataChegada.'\' and data_saida_em > \''.$dataSaida.'\')
+                or (data_chegada_em <= \''.$dataChegada.'\' and data_saida_em > \''.$dataChegada.'\')
+            )
+        ))';
     }
 }

@@ -77,12 +77,12 @@ class Local extends Model
     public function formataTags($dados)
     {
         $this->tags = json_encode([
-            'durma_bem_caminhoneiro' => array_key_exists('durma_bem_caminhoneiro', $dados) ? $dados['durma_bem_caminhoneiro'] : false,
-            'apoio_ccr' => array_key_exists('apoio_ccr', $dados) ? $dados['apoio_ccr'] : false,
-            'restaurante' => array_key_exists('restaurante', $dados) ? $dados['restaurante'] : false,
-            'abastecimento' => array_key_exists('abastecimento', $dados) ? $dados['abastecimento'] : false,
-            'chuveiro' => array_key_exists('chuveiro', $dados) ? $dados['chuveiro'] : false,
-            'dormir' => array_key_exists('dormir', $dados) ? $dados['dormir'] : false,
+            'durma_bem_caminhoneiro' => array_key_exists('durma_bem_caminhoneiro', $dados) && $dados['durma_bem_caminhoneiro'] == 'on' ? true : false,
+            'apoio_ccr' => array_key_exists('apoio_ccr', $dados) && $dados['apoio_ccr'] == 'on' ? true : false,
+            'restaurante' => array_key_exists('restaurante', $dados) && $dados['restaurante'] == 'on' ? true : false,
+            'abastecimento' => array_key_exists('abastecimento', $dados) && $dados['abastecimento'] == 'on' ? true : false,
+            'chuveiro' => array_key_exists('chuveiro', $dados) && $dados['chuveiro'] == 'on' ? true : false,
+            'dormir' => array_key_exists('dormir', $dados) && $dados['dormir'] == 'on' ? true : false,
         ]);
 
         return $this;
