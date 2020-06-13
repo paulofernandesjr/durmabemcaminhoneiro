@@ -41,6 +41,7 @@ class LocalController extends Controller
                 $local->tags = json_decode($local->tags, true);
                 $local->votos = $avaliacao->votos;
                 $local->avaliacao_media = (double) $avaliacao->avaliacao_media;
+                $local->aceita_reserva = (bool) $local->aceita_reserva;
                 
                 return $local;
             })

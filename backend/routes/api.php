@@ -22,5 +22,7 @@ Route::get('/locais', 'LocalController@locais');
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/avaliar/{local}', 'AvaliacaoController@avaliar');
+
+    Route::post('/reservas/{local}', 'ReservaController@reservar');
 });
 

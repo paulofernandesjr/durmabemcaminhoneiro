@@ -21,6 +21,7 @@ class Avaliacao extends Model
     ];
 
     protected $hidden = [
+        'id',
         'motorista_id',
         'local_id'
     ];
