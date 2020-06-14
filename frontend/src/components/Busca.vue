@@ -1,6 +1,36 @@
 <template>
   <div>
-    <q-card class="q-mb-sm" v-if="!showResult">
+    <q-dialog v-model="showReserva">
+      <q-card class="my-card">
+        <q-card-section>
+          <div class="row no-wrap items-center">
+            <div class="col text-h6 ellipsis">
+              Confirmar Reserva
+            </div>
+            <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
+              R$ 50
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <div class="text-subtitle1">
+            $・Italian, Cafe
+          </div>
+          <div class="text-caption text-grey">
+            Small plates, salads & sandwiches in an intimate setting.
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn v-close-popup color="primary" flat icon="monetization_on" label="usar créditos" />
+          <q-btn v-close-popup color="primary" flat icon="credit_card" label="usar cartão" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+      <q-card class="q-mb-sm" v-if="!showResult">
       <q-card-section class="q-pb-none">
         <q-select
           filled
@@ -16,8 +46,6 @@
           class="full-width"
           :error="$v.rodovia.$error"
           no-error-icon
-          hide-hint="true"
-          bottom-slots="false"
           error-message=""
         >
           <template v-slot:no-option>
@@ -138,77 +166,94 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <q-list v-if="showResult" bordered>
-      <div v-for="item in lista" v-bind:key="item.uuid">
-
+    <q-pull-to-refresh @refresh="refresh">
+      <q-list v-if="showResult && lista.length > 0" bordered>
+        <div v-for="item in lista" v-bind:key="item.uuid">
+          <q-item>
+            <!-- <q-item-section side top>
+              <q-avatar size="md" color="red" text-color="white" icon="directions" />
+            </q-item-section> -->
+            <q-item-section>
+              <q-item-label>{{ item.nome }}</q-item-label>
+              <q-item-label caption>{{ item.rodovia}}, KM {{ item.km }}, {{ item.cidade_nome }}/{{ item.estado_uf }}</q-item-label>
+              <!-- <q-label caption>2 min ago</q-label><br/>
+              <div class="text-orange">
+                <q-icon name="star" />
+                <q-icon name="star" />
+                <q-icon name="star" />
+              </div> -->
+            </q-item-section>
+            <q-item-section side top>
+              <div class="text-orange" v-if="item.votos">
+                <q-icon name="star" v-for="id in Array(Math.floor(item.avaliacao_media))" v-bind:key="id" />
+              </div>
+              <q-item-label caption v-if="item.votos">{{ item.votos }} votos</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <div class="q-gutter-md text-blue">
+                <q-icon size="sm" name="hotel" v-if="item.tags.dormir">
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                    <strong>Local para descanso</strong>
+                  </q-tooltip>
+                </q-icon>
+                <q-icon size="sm" name="fas fa-road" v-if="item.tags.apoio_ccr">
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                    <strong>Apoio CCR</strong>
+                  </q-tooltip>
+                </q-icon>
+                <q-icon size="sm" name="local_dining" v-if="item.tags.restaurante">
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                    <strong>Restaurante</strong>
+                  </q-tooltip>
+                </q-icon>
+                <q-icon size="sm" name="local_gas_station" v-if="item.tags.abastecimento">
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                    <strong>Posto de Combustível</strong>
+                  </q-tooltip>
+                </q-icon>
+                <q-icon size="sm" name="fas fa-shower" v-if="item.tags.chuveiro">
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                    <strong>Chuveiro</strong>
+                  </q-tooltip>
+                </q-icon>
+                <!-- durma_bem_caminhoneiro: true, -->
+              </div>
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <q-item-label color="primary" text-color="white">
+                {{ item.vagas_disponiveis > 0 ? item.vagas_disponiveis : 'nenhuma' }} {{ item.vagas_disponiveis > 1 ? 'vagas' : 'vaga' }} {{ item.aceita_reserva ? ( item.vagas_disponiveis > 1 ? 'disponíveis' : 'disponível' ) : '' }}
+              </q-item-label>
+              <!-- <q-item-label class="full-width q-mt-sm text-subtitle2" v-if="item.vagas_disponiveis">{{ item.vagas_disponiveis > 0 ? item.vagas_disponiveis : 'nenhuma' }} {{ item.vagas_disponiveis > 1 ? 'vagas' : 'vaga' }} {{ item.vagas_disponiveis > 1 ? 'disponíveis' : 'disponível' }}</q-item-label> -->
+            </q-item-section>
+            <q-item-section side top v-if="item.aceita_reserva">
+              <q-btn label="reservar" @click="showDialog(item.uuid)" rounded color="primary" :disabled="item.vagas_disponiveis === 0" />
+            </q-item-section>
+          </q-item>
+          <q-separator spaced inset />
+        </div>
+      </q-list>
+    <q-pull-to-refresh @refresh="refresh">
+    </q-pull-to-refresh>
+      <q-list v-if="showResult && lista.length === 0">
         <q-item>
-          <!-- <q-item-section side top>
-            <q-avatar size="md" color="red" text-color="white" icon="directions" />
-          </q-item-section> -->
-          <q-item-section>
-            <q-item-label>{{ item.nome }}</q-item-label>
-            <q-item-label caption>{{ item.rodovia}}, KM {{ item.km }}, {{ item.cidade_nome }}/{{ item.estado_uf }}</q-item-label>
-            <!-- <q-label caption>2 min ago</q-label><br/>
-            <div class="text-orange">
-              <q-icon name="star" />
-              <q-icon name="star" />
-              <q-icon name="star" />
-            </div> -->
-          </q-item-section>
-          <q-item-section side top>
-            <div class="text-orange" v-if="item.votos">
-              <q-icon name="star" v-for="id in Array(Math.floor(item.avaliacao_media))" v-bind:key="id" />
-            </div>
-            <q-item-label caption v-if="item.votos">{{ item.votos }} votos</q-item-label>
-          </q-item-section>
+            <q-item-section class="text-center q-py-lg">
+              <p>
+                <img
+                  src="~assets/sad.svg"
+                  style="width:30vw;max-width:150px;"
+                >
+              </p>
+              <p class="text-faded text-h6 text-weight-light">
+              Nenhum local encontrado para a busca selecionada!
+              </p>
+            </q-item-section>
         </q-item>
-        <q-item>
-          <q-item-section>
-            <div class="q-gutter-md text-blue">
-              <q-icon size="sm" name="hotel" v-if="item.tags.dormir">
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                  <strong>Local para descanso</strong>
-                </q-tooltip>
-              </q-icon>
-              <q-icon size="sm" name="fas fa-road" v-if="item.tags.apoio_ccr">
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                  <strong>Apoio CCR</strong>
-                </q-tooltip>
-              </q-icon>
-              <q-icon size="sm" name="local_dining" v-if="item.tags.restaurante">
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                  <strong>Restaurante</strong>
-                </q-tooltip>
-              </q-icon>
-              <q-icon size="sm" name="local_gas_station" v-if="item.tags.abastecimento">
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                  <strong>Posto de Combustível</strong>
-                </q-tooltip>
-              </q-icon>
-              <q-icon size="sm" name="fas fa-shower" v-if="item.tags.chuveiro">
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                  <strong>Chuveiro</strong>
-                </q-tooltip>
-              </q-icon>
-              <!-- durma_bem_caminhoneiro: true, -->
-            </div>
-          </q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label color="primary" text-color="white" v-if="item.aceita_reserva">
-              {{ item.vagas_disponiveis > 0 ? item.vagas_disponiveis : 'nenhuma' }} {{ item.vagas_disponiveis > 1 ? 'vagas' : 'vaga' }} {{ item.vagas_disponiveis > 1 ? 'disponíveis' : 'disponível' }}
-            </q-item-label>
-            <!-- <q-item-label class="full-width q-mt-sm text-subtitle2" v-if="item.vagas_disponiveis">{{ item.vagas_disponiveis > 0 ? item.vagas_disponiveis : 'nenhuma' }} {{ item.vagas_disponiveis > 1 ? 'vagas' : 'vaga' }} {{ item.vagas_disponiveis > 1 ? 'disponíveis' : 'disponível' }}</q-item-label> -->
-          </q-item-section>
-          <q-item-section side top>
-            <q-btn label="reservar" @click="showDialog(item.uuid)" rounded color="primary" :disabled="item.vagas_disponiveis === 0" />
-          </q-item-section>
-        </q-item>
-        <q-separator spaced inset />
-      </div>
-
-    </q-list>
+      </q-list>
+    </q-pull-to-refresh>
     <q-list v-if="false && showResult" bordered class="q-my-lg">
       <q-card class="my-card" v-for="item in lista" v-bind:key="item.uuid">
         <q-img src="https://cdn.quasar.dev/img/chicken-salad.jpg" />
@@ -279,6 +324,7 @@
         </q-card-actions>
       </q-card>
     </q-list>
+    <q-btn @click="setLocalStorage" label="TESTE: definir local storage" />
 
     <!--
     TODO: se não autenticado, exibir componente de login<br/>
@@ -319,6 +365,7 @@ export default {
   // name: 'ComponentName',
   data () {
     return {
+      lorem: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus, ratione eum minus fuga, quasi dicta facilis corporis magnam, suscipit at quo nostrum!',
       rodovia: null,
       sentido: null,
       estado: null,
@@ -329,6 +376,7 @@ export default {
       optionsSentido: stringSentido,
       optionsEstados: stringEstados,
       showResult: false,
+      showReserva: false,
       lista: [
         {
           uuid: 'fa2424a2-3ee1-40c4-96af-370095710a76',
@@ -387,6 +435,9 @@ export default {
         default:
           return ['Capital', 'Interior', ...stringSentido]
       }
+    },
+    getToken () {
+      return JSON.parse(this.$q.localStorage.getItem('token')) || {}
     }
   },
   validations: {
@@ -412,6 +463,10 @@ export default {
   },
 
   methods: {
+    async refresh (done) {
+      await this.search()
+      done()
+    },
     async search () {
       // Validar dados
       this.$v.$touch()
@@ -420,7 +475,7 @@ export default {
         return
       }
 
-      // TODO: Chamar Axios e mudar lista
+      // Chamar Axios e mudar lista
       this.lista = await this.$axios.get(`https://api.durmabemcaminhoneiro.com.br/api/locais?data_chegada_em=${this.checkin}&data_saida_em=${this.checkout}&rodovia=${this.rodovia}&sentido=${this.sentido}&estado=${this.estado}`)
         .then((response) => {
           return response.data || []
@@ -437,7 +492,7 @@ export default {
       this.showResult = true
     },
     resetSearch () {
-      this.$v.reset()
+      this.$v.$reset()
       this.showResult = false
       this.rodovia = null
       this.sentido = null
@@ -447,14 +502,14 @@ export default {
     },
     addReserva () {
       var config = {
-        Authorization: 'Bearer ' + this.token.access_token // @TODO: Colocar Token de acesso
+        Authorization: `${this.getToken.token_type} ${this.getToken.access_token}` // @TODO: Colocar Token de acesso
       }
 
       // TODO: chamar Axios para reserva
-      this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/reservas/' + this.localEscolhido, {
+      this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/reservas/' + this.localEscolhido, { headers: config }, {
         data_chegada_em: this.checkin,
         data_saida_em: this.checkout
-      }, config).then((response) => {
+      }).then((response) => {
         return response || {}
       }).catch((err) => {
         this.$q.notify({
@@ -466,29 +521,30 @@ export default {
       })
     },
     showDialog (uuid) {
+      this.showReserva = true
       // TODO: montar formulário de reserva
-      this.$q.dialog({
-        title: 'Deseja confirmar sua reserva?',
-        message: `${uuid}`,
-        html: true,
-        ok: {
-          label: 'Confirmar',
-          color: 'primary',
-          outline: true,
-          rounded: true
-        },
-        cancel: {
-          label: 'Cancelar',
-          flat: true
-        }
-      }).onOk(() => {
-        console.log('OK')
-        // TODO: chamar axios e realizar requisicao de reserva
-      }).onCancel(() => {
-        console.log('Cancel')
-      }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
-      })
+      // this.$q.dialog({
+      //   title: 'Deseja confirmar sua reserva?',
+      //   message: `${uuid}`,
+      //   html: true,
+      //   ok: {
+      //     label: 'Confirmar',
+      //     color: 'primary',
+      //     outline: true,
+      //     rounded: true
+      //   },
+      //   cancel: {
+      //     label: 'Cancelar',
+      //     flat: true
+      //   }
+      // }).onOk(() => {
+      //   console.log('OK')
+      //   // TODO: chamar axios e realizar requisicao de reserva
+      // }).onCancel(() => {
+      //   console.log('Cancel')
+      // }).onDismiss(() => {
+      //   // console.log('I am triggered on both OK and Cancel')
+      // })
     },
     filterFn (val, update, abort) {
       // call abort() at any time if you can't retrieve data somehow
@@ -501,9 +557,15 @@ export default {
         }
       })
     },
-
     abortFilterFn () {
       // console.log('delayed filter aborted')
+    },
+    setLocalStorage () {
+      localStorage.setItem('token', JSON.stringify({
+        token_type: 'Bearer',
+        expires_in: 31536000,
+        access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGNjOTU5ZC05MDJhLTRiZDgtOWJiNi1iYTRiZGNjYTEwMDIiLCJqdGkiOiJiNmRiODAwMzg4MTMxMjJjZjE3YmVhNjEyM2E1NTY5MTVjNGVhMTE2ZDIzMjgxN2YwMWQ2MTU5YmU0MTM2NjU3NjYwYjAyN2Q3MTU2NGJjOSIsImlhdCI6MTU5MjA4MzYwMSwibmJmIjoxNTkyMDgzNjAxLCJleHAiOjE2MjM2MTk2MDEsInN1YiI6IjIiLCJzY29wZXMiOltdfQ.P43Z-Knb1edzyWzmNoLmSv4bTyzSscrI1tE5DyPC5TURNaE38e5u6eDgJ6Wf-0J-P1uXs4s3nIkmUcwqBtTWxGj5odsGiQjUSjKOD2TmI'
+      }))
     }
   },
 
@@ -529,6 +591,8 @@ export default {
         this.checkout = dataCheckin.add(12, 'hours').format('DD/MM/YYYY HH:mm')
       }
     }
+  },
+  created () {
   }
 }
 </script>

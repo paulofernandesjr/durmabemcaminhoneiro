@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <q-card class="q-my-lg q-pa-md">
+    <q-card class="q-pa-md">
       <h6 class="q-mt-none q-mb-lg">Use uma conta para reservar!</h6>
       <div class="q-gutter-md q-mb-lg">
         <q-input filled label="Celular" stack-label />
@@ -11,8 +11,6 @@
         <q-btn label="Entrar/Cadastrar" color="primary" />
       </div>
       <q-btn label="Criar nova conta" />
-      <q-btn label="Esqueci minha senha" flat />
-
     </q-card>
     Login<br/>
     TODO: chamada de login e salvar token<br/>
@@ -40,13 +38,13 @@ export default {
         headers: { Accept: '*/*' }
       }
 
-      this.token = await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', {
+      this.token = await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', { headers: config }, {
         client_id: this.client_id,
         client_secret: this.client_secret,
         grant_type: this.grant_type,
         username: this.cpf,
         password: this.senha
-      }, config).then((response) => {
+      }).then((response) => {
         return response || []
       }).catch((err) => {
         this.$q.notify({
@@ -62,7 +60,7 @@ export default {
         headers: { Authorization: 'Bearer ' + this.token.access_token }
       }
 
-      this.motorista = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/motorista', config)
+      this.motorista = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/motorista', { headers: config })
         .then((response) => {
           return response || {}
         }).catch((err) => {

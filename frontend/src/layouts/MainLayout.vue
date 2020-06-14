@@ -70,22 +70,24 @@ export default {
         },
         {
           title: 'Sobre',
-          caption: 'Hackathon CCR',
           icon: 'favorite',
           link: '/sobre',
           target: ''
         },
         {
-          title: 'Github',
-          caption: 'github.com/quasarframework',
-          icon: 'code',
-          link: 'https://github.com/quasarframework'
+          title: 'Apresentação',
+          icon: 'picture_as_pdf',
+          link: 'https://PDF'
         },
         {
-          title: 'Facebook',
-          caption: '@QuasarFramework',
-          icon: 'public',
-          link: 'https://facebook.quasar.dev'
+          title: 'Vídeo',
+          icon: 'movie',
+          link: 'https://youtu.be/XYZABC'
+        },
+        {
+          title: 'Github',
+          icon: 'code',
+          link: 'https://github.com/paulofernandesjr/durmabemcaminhoneiro'
         }
       ]
     }
@@ -94,12 +96,12 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .base:before {
-    content: "";
-    height: 127px;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    background-color: $primary;
-  }
+  // .base:before {
+  //   content: "";
+  //   height: 127px;
+  //   position: absolute;
+  //   top: 0;
+  //   width: 100%;
+  //   background-color: $primary;
+  // }
 </style>
