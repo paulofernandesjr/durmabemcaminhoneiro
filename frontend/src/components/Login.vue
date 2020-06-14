@@ -110,7 +110,7 @@ export default {
 
       await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', bodyFormData, config).then((response) => {
         console.log('RESPOSTA LOGIN', response)
-        // this.$q.localStorage.localStorage.setItem('token', JSON.stringify(response.data || {}))
+        this.$q.localStorage.localStorage.setItem('token', JSON.stringify(response.data || {}))
         this.$root.$emit('updateUser', response.data || {})
         return response || {}
       }).catch((err) => {
