@@ -1,36 +1,10 @@
 <template>
   <div>
     <q-dialog v-model="showReserva">
-      <q-card class="my-card">
-        <q-card-section>
-          <div class="row no-wrap items-center">
-            <div class="col text-h6 ellipsis">
-              Confirmar Reserva
-            </div>
-            <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
-              R$ 50
-            </div>
-          </div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <div class="text-subtitle1">
-            $・Italian, Cafe
-          </div>
-          <div class="text-caption text-grey">
-            Small plates, salads & sandwiches in an intimate setting.
-          </div>
-        </q-card-section>
-
-        <q-separator />
-
-        <q-card-actions align="right">
-          <q-btn v-close-popup color="primary" flat icon="monetization_on" label="usar créditos" />
-          <q-btn v-close-popup color="primary" flat icon="credit_card" label="usar cartão" />
-        </q-card-actions>
-      </q-card>
+      <Login v-if="!isAuthenticated" />
+      <Booking v-if="isAuthenticated" />
     </q-dialog>
-      <q-card class="q-mb-sm" v-if="!showResult">
+    <q-card class="q-mb-sm" v-if="!showResult">
       <q-card-section class="q-pb-none">
         <q-select
           filled
@@ -324,7 +298,8 @@
         </q-card-actions>
       </q-card>
     </q-list>
-    <q-btn @click="setLocalStorage" label="TESTE: definir local storage" />
+    <q-btn outline @click="setLocalStorage" class="q-mt-lg" label="TESTE: definir local storage" />
+    <q-btn outline @click="clearLocalStorage" class="q-mt-lg" label="TESTE: limpar local storage" />
 
     <!--
     TODO: se não autenticado, exibir componente de login<br/>
@@ -344,6 +319,9 @@
 </template>
 
 <script>
+import Login from 'components/Login'
+import Booking from 'components/Booking'
+
 import { required, requiredIf } from 'vuelidate/lib/validators'
 
 const stringRodovias = [
@@ -363,8 +341,10 @@ const stringEstados = [
 
 export default {
   // name: 'ComponentName',
+  components: { Login, Booking },
   data () {
     return {
+      token: {},
       lorem: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus, ratione eum minus fuga, quasi dicta facilis corporis magnam, suscipit at quo nostrum!',
       rodovia: null,
       sentido: null,
@@ -378,27 +358,6 @@ export default {
       showResult: false,
       showReserva: false,
       lista: [
-        {
-          uuid: 'fa2424a2-3ee1-40c4-96af-370095710a76',
-          nome: 'Teste',
-          estado_uf: 'SP',
-          cidade_nome: 'Itu',
-          rodovia: 'BR-116',
-          km: '500',
-          aceita_reserva: true,
-          valor_estadia: null,
-          tags: {
-            durma_bem_caminhoneiro: true,
-            apoio_ccr: true,
-            restaurante: true,
-            abastecimento: true,
-            chuveiro: false,
-            dormir: false
-          },
-          vagas_disponiveis: 0,
-          votos: 1,
-          avaliacao_media: 4.5
-        }
       ]
     }
   },
@@ -436,8 +395,11 @@ export default {
           return ['Capital', 'Interior', ...stringSentido]
       }
     },
+    isAuthenticated () {
+      return this.getToken.access_token || false
+    },
     getToken () {
-      return JSON.parse(this.$q.localStorage.getItem('token')) || {}
+      return this.token
     }
   },
   validations: {
@@ -522,29 +484,6 @@ export default {
     },
     showDialog (uuid) {
       this.showReserva = true
-      // TODO: montar formulário de reserva
-      // this.$q.dialog({
-      //   title: 'Deseja confirmar sua reserva?',
-      //   message: `${uuid}`,
-      //   html: true,
-      //   ok: {
-      //     label: 'Confirmar',
-      //     color: 'primary',
-      //     outline: true,
-      //     rounded: true
-      //   },
-      //   cancel: {
-      //     label: 'Cancelar',
-      //     flat: true
-      //   }
-      // }).onOk(() => {
-      //   console.log('OK')
-      //   // TODO: chamar axios e realizar requisicao de reserva
-      // }).onCancel(() => {
-      //   console.log('Cancel')
-      // }).onDismiss(() => {
-      //   // console.log('I am triggered on both OK and Cancel')
-      // })
     },
     filterFn (val, update, abort) {
       // call abort() at any time if you can't retrieve data somehow
@@ -560,12 +499,19 @@ export default {
     abortFilterFn () {
       // console.log('delayed filter aborted')
     },
+    updateUser () {
+      this.token = JSON.parse(this.$q.localStorage.getItem('token')) || {}
+    },
     setLocalStorage () {
       localStorage.setItem('token', JSON.stringify({
         token_type: 'Bearer',
         expires_in: 31536000,
         access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGNjOTU5ZC05MDJhLTRiZDgtOWJiNi1iYTRiZGNjYTEwMDIiLCJqdGkiOiJiNmRiODAwMzg4MTMxMjJjZjE3YmVhNjEyM2E1NTY5MTVjNGVhMTE2ZDIzMjgxN2YwMWQ2MTU5YmU0MTM2NjU3NjYwYjAyN2Q3MTU2NGJjOSIsImlhdCI6MTU5MjA4MzYwMSwibmJmIjoxNTkyMDgzNjAxLCJleHAiOjE2MjM2MTk2MDEsInN1YiI6IjIiLCJzY29wZXMiOltdfQ.P43Z-Knb1edzyWzmNoLmSv4bTyzSscrI1tE5DyPC5TURNaE38e5u6eDgJ6Wf-0J-P1uXs4s3nIkmUcwqBtTWxGj5odsGiQjUSjKOD2TmI'
       }))
+      this.$root.$emit('updateUser')
+    },
+    clearLocalStorage () {
+      localStorage.removeItem('token')
       this.$root.$emit('updateUser')
     }
   },
@@ -594,6 +540,8 @@ export default {
     }
   },
   created () {
+    this.$root.$on('updateUser', this.updateUser)
+    this.updateUser()
   }
 }
 </script>

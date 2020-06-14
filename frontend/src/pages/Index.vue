@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import Login from 'components/Login'
 import Busca from 'components/Busca'
 import Booking from 'components/Booking'
 
@@ -49,7 +48,6 @@ export default {
   name: 'PageIndex',
 
   components: {
-    Login,
     Busca,
     Booking
   },
@@ -74,9 +72,9 @@ export default {
     }
   },
   created () {
-    this.getBookings()
     this.$root.$on('updateUser', this.updateUser)
     this.updateUser()
+    this.getBookings()
     if (this.isAuthenticated && this.totalBookings) {
       this.tab = 'bookings'
     }
@@ -86,14 +84,18 @@ export default {
       this.token = JSON.parse(this.$q.localStorage.getItem('token')) || {}
     },
     async getBookings () {
-      var config = {
-        headers: { Authorization: 'Bearer ' + this.token.access_token }
+      if (!this.isAuthenticated) {
+        console.log('NAO AUTENTICADO!!!')
+        return
       }
-      // TODO: sair se não estiver autenticado
-      // TODO: chamada no servidor
+      var config = {
+        Authorization: `${this.getToken.token_type} ${this.getToken.access_token}` // @TODO: Colocar Token de acesso
+      }
+      
       // https://api.durmabemcaminhoneiro.com.br/api/reservas
-      this.bookings = this.$axiso.get('https://api.durmabemcaminhoneiro.com.br/api/reservas', { headers: config })
+      this.bookings = this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/reservas', { headers: config })
         .then((response) => {
+          console.log('bookings', response)
           return response || []
         })
     }

@@ -3,28 +3,34 @@
     <q-card class="q-pa-md">
       <h6 class="q-mt-none q-mb-lg">Use uma conta para reservar!</h6>
       <div class="q-gutter-md q-mb-lg">
-        <q-input filled label="Celular" stack-label />
-        <q-input filled label="CPF" stack-label />
-        <q-input filled label="Nome" stack-label />
-        <q-input filled label="Senha" type="password" stack-label />
-        <q-input filled label="Confirmar Senha" type="password" stack-label />
-        <q-btn label="Entrar/Cadastrar" color="primary" />
+        <q-input filled v-model.trim="cpf" label="CPF" stack-label />
+        <q-input filled v-model.trim="nome" label="Nome" stack-label v-if="modo === 'cadastro'" />
+        <q-input filled v-model.trim="celular" label="Celular" stack-label v-if="modo === 'cadastro'" />
+        <q-input filled v-model.trim="senha" label="Senha" type="password" stack-label />
+        <q-input filled v-model.trim="confirmarSenha" label="Confirmar Senha" type="password" stack-label v-if="modo === 'cadastro'" />
+        <div class="text-right">
+          <q-btn :label="modo === 'login' ? 'Entrar' : 'Cadastrar'" color="primary" />
+        </div>
       </div>
-      <q-btn label="Criar nova conta" />
+      <q-btn flat class="full-width" @click="toggleModo" :label="modo === 'login' ? 'nova conta' : 'Usar conta existente'" />
     </q-card>
-    Login<br/>
+    <!-- Login<br/>
     TODO: chamada de login e salvar token<br/>
-    TODO: separar interfaces conforme acao: login, cadastro, lembrete<br/>
+    TODO: separar interfaces conforme acao: login, cadastro, lembrete<br/> -->
   </div>
 </template>
 
 <script>
 export default {
-  // name: 'ComponentName',
+  name: 'Login',
   data () {
     return {
+      modo: 'login',
       cpf: null,
+      celular: null,
+      nome: null,
       senha: null,
+      confirmarSenha: null,
       client_id: '90ccb958-aa43-4c1b-9181-4f7f110f04f8',
       client_secret: 'WSoX61q4Dt7EuXhyzAex5LTFra6tgqzNSjBo2NKR',
       grant_type: 'password',
@@ -33,6 +39,9 @@ export default {
     }
   },
   methods: {
+    toggleModo () {
+      this.modo = this.modo === 'login' ? 'cadastro' : 'login'
+    },
     async logar () {
       var config = {
         headers: { Accept: '*/*' }
