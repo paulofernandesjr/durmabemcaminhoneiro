@@ -38,7 +38,6 @@
           @input="$v.sentido.$touch()"
           :error="$v.sentido.$error"
           no-error-icon
-          autofocus
         >
           <template v-slot:no-option>
             <q-item>
@@ -325,6 +324,7 @@ export default {
       estado: null,
       checkin: null,
       checkout: null,
+      localEscolhido: null,
       optionsRodovia: stringRodovias,
       optionsSentido: stringSentido,
       optionsEstados: stringEstados,
@@ -412,24 +412,42 @@ export default {
   },
 
   methods: {
-    search () {
+    async search () {
       // Validar dados
       this.$v.$touch()
       if (this.$v.$invalid) {
         console.log('ERRO!!!')
         return
       }
-      // Chamar Axios
-      // Mudar showResult
+
+      // TODO: Chamar Axios e mudar lista
+      this.lista = await this.$axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.estado}/municipios`)
+        .then((response) => {
+          return response
+        })
+        .catch((err) => {
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: 'Erro ao carregar as cidades' + err,
+            icon: 'report_problem'
+          })
+        })
+      // TODO: Mudar showResult
       this.showResult = true
     },
     resetSearch () {
+      this.$v.reset()
       this.showResult = false
       this.rodovia = null
       this.sentido = null
       this.estado = null
       this.checkin = null
       this.checkout = null
+    },
+    addReserva () {
+      // TODO: chamar Axios para reserva
+      console.log('adicionei reserva')
     },
     showDialog (uuid) {
       // TODO: montar formulário de reserva
@@ -474,6 +492,10 @@ export default {
   },
 
   watch: {
+    rodovia (to, from) {
+      this.sentido = null
+      this.estado = null
+    },
     checkin (to, from) {
       const dataCheckin = this.$moment(to, 'DD/MM/YYYY HH:mm')
       if (!to) {
@@ -481,7 +503,7 @@ export default {
         return
       }
       if (dataCheckin.toDate() < new Date()) {
-        this.checkin = this.$moment(new Date()).format('DD/MM/YYYY HH:mm')
+        this.checkin = this.$moment(new Date()).add(1, 'minutes').format('DD/MM/YYYY HH:mm')
       }
       this.checkout = dataCheckin.add(12, 'hours').format('DD/MM/YYYY HH:mm')
     },
