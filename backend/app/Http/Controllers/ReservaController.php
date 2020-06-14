@@ -37,7 +37,7 @@ class ReservaController extends Controller
 
                 return $local;
             })
-            ->setColumns([
+            ->setOrders([
                 'data_chegada_em' => 'asc',
                 'data_saida_em' => 'asc'
             ])
