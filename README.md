@@ -3,4 +3,5 @@
 
 ## Fique a vontade para conhecer nosso projeto, ele foi desenvolvido com Laravel e VueJS
 
-### Para acessar em produção [Clique aqui]([https://durmabemcaminhoneiro.com.br/](https://durmabemcaminhoneiro.com.br/))
+### Para acessar em produção [Clique aqui](https://durmabemcaminhoneiro.com.br/)
+
