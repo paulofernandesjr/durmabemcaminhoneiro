@@ -73,6 +73,7 @@ export default {
   },
   created () {
     this.$root.$on('updateUser', this.updateUser)
+    this.$root.$on('updateReservas', this.getBookings)
     this.updateUser()
     this.getBookings()
     if (this.isAuthenticated && this.totalBookings) {
