@@ -26,6 +26,7 @@ import { validaCpf } from '../utils/validaCpf'
 
 export default {
   name: 'Login',
+  props: ['token'],
   data () {
     return {
       modo: 'login',
@@ -37,7 +38,6 @@ export default {
       client_id: '90ccb958-aa43-4c1b-9181-4f7f110f04f8',
       client_secret: 'WSoX61q4Dt7EuXhyzAex5LTFra6tgqzNSjBo2NKR',
       grant_type: 'password',
-      token: null,
       motorista: null
     }
   },
@@ -97,21 +97,24 @@ export default {
       var config = {
         headers: {
           Accept: '*/*',
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       }
+      var bodyFormData = new FormData()
+      bodyFormData.set('client_id', this.client_id)
+      bodyFormData.set('client_secret', this.client_secret)
+      bodyFormData.set('grant_type', this.grant_type)
+      bodyFormData.set('username', this.cpf)
+      bodyFormData.set('password', this.senha)
+      console.log('bodyFormData', bodyFormData)
 
-      this.token = await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', { headers: config }, {
-        client_id: this.client_id,
-        client_secret: this.client_secret,
-        grant_type: this.grant_type,
-        username: this.cpf,
-        password: this.senha
-      }).then((response) => {
-        localStorage.setItem('token', JSON.stringify(response))
-        this.$root.$emit('updateUser')
+      await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', bodyFormData, { headers: config }).then((response) => {
+        console.log('RESPOSTA LOGIN', response)
+        // this.$q.localStorage.localStorage.setItem('token', JSON.stringify(response.data || {}))
+        this.$root.$emit('updateUser', response.data || {})
         return response || {}
       }).catch((err) => {
+        this.$root.$emit('updateUser', {})
         this.$q.notify({
           color: 'negative',
           position: 'top',

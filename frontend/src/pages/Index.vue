@@ -26,16 +26,16 @@
         <Booking v-for="booking in bookings" v-bind:key="booking.uuid" :booking="booking" />
       </q-tab-panel>
       <q-tab-panel name="bookings" v-if="!isAuthenticated">
-        <Login />
       </q-tab-panel>
       <q-tab-panel name="search">
-        <Busca token="getToken" />
+        <Busca :token="token" />
       </q-tab-panel>
     </q-tab-panels>
 
     <!-- <q-page-sticky position="bottom-right" :offset="[16,16]">
       <q-btn fab icon="add" color="primary"></q-btn>
     </q-page-sticky> -->
+    {{ token }}
 
   </q-page>
 </template>
@@ -65,23 +65,23 @@ export default {
       return this.bookings.length
     },
     isAuthenticated () {
-      return this.getToken.access_token || false
-    },
-    getToken () {
-      return this.token
+      return [null, undefined].indexOf(this.token.access_token) < 0
     }
   },
   created () {
     this.$root.$on('updateUser', this.updateUser)
-    this.updateUser()
+    this.updateUser(JSON.parse(this.$q.localStorage.getItem('token')) || {})
     this.getBookings()
     if (this.isAuthenticated && this.totalBookings) {
       this.tab = 'bookings'
     }
   },
   methods: {
-    updateUser () {
-      this.token = JSON.parse(this.$q.localStorage.getItem('token')) || {}
+    updateUser (newToken) {
+      console.log('UPDATE USER INDEX')
+      this.token = newToken
+      // TODO: salvar no localStorage
+      // JSON.parse(this.$q.localStorage.getItem('token')) || {}
     },
     async getBookings () {
       if (!this.isAuthenticated) {
@@ -89,7 +89,7 @@ export default {
         return
       }
       var config = {
-        Authorization: `${this.getToken.token_type} ${this.getToken.access_token}` // @TODO: Colocar Token de acesso
+        Authorization: `${this.token.token_type} ${this.token.access_token}` // @TODO: Colocar Token de acesso
       }
 
       // https://api.durmabemcaminhoneiro.com.br/api/reservas
@@ -98,6 +98,11 @@ export default {
           console.log('bookings', response)
           return response || []
         })
+    }
+  },
+  watch: {
+    token (to, from) {
+      console.log('mudou token', to, from)
     }
   }
 

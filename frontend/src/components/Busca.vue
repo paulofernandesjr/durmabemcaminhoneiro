@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-dialog v-model="showReserva">
-      <Login v-if="!isAuthenticated" />
+      <Login v-if="!isAuthenticated" token="token" />
       <Booking v-if="isAuthenticated" />
     </q-dialog>
     <q-card class="q-mb-sm" v-if="!showResult">
@@ -342,9 +342,9 @@ const stringEstados = [
 export default {
   // name: 'ComponentName',
   components: { Login, Booking },
+  props: ['token'],
   data () {
     return {
-      token: {},
       lorem: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus, ratione eum minus fuga, quasi dicta facilis corporis magnam, suscipit at quo nostrum!',
       rodovia: null,
       sentido: null,
@@ -396,10 +396,8 @@ export default {
       }
     },
     isAuthenticated () {
-      return this.getToken.access_token || false
-    },
-    getToken () {
-      return this.token
+      console.log('isAuthenticated', this.token.access_token, [null, undefined].indexOf(this.token.access_token))
+      return [null, undefined].indexOf(this.token.access_token) < 0
     }
   },
   validations: {
@@ -467,7 +465,7 @@ export default {
     },
     addReserva () {
       var config = {
-        Authorization: `${this.getToken.token_type} ${this.getToken.access_token}` // @TODO: Colocar Token de acesso
+        Authorization: `${this.token.token_type} ${this.token.access_token}` // @TODO: Colocar Token de acesso
       }
 
       // TODO: chamar Axios para reserva
@@ -503,19 +501,18 @@ export default {
       // console.log('delayed filter aborted')
     },
     updateUser () {
-      this.token = JSON.parse(this.$q.localStorage.getItem('token')) || {}
+      console.log('UPDATE USER BUSCA!')
     },
     setLocalStorage () {
-      localStorage.setItem('token', JSON.stringify({
+      this.$root.$emit('updateUser', {
         token_type: 'Bearer',
         expires_in: 31536000,
         access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGNjOTU5ZC05MDJhLTRiZDgtOWJiNi1iYTRiZGNjYTEwMDIiLCJqdGkiOiJiNmRiODAwMzg4MTMxMjJjZjE3YmVhNjEyM2E1NTY5MTVjNGVhMTE2ZDIzMjgxN2YwMWQ2MTU5YmU0MTM2NjU3NjYwYjAyN2Q3MTU2NGJjOSIsImlhdCI6MTU5MjA4MzYwMSwibmJmIjoxNTkyMDgzNjAxLCJleHAiOjE2MjM2MTk2MDEsInN1YiI6IjIiLCJzY29wZXMiOltdfQ.P43Z-Knb1edzyWzmNoLmSv4bTyzSscrI1tE5DyPC5TURNaE38e5u6eDgJ6Wf-0J-P1uXs4s3nIkmUcwqBtTWxGj5odsGiQjUSjKOD2TmI'
-      }))
-      this.$root.$emit('updateUser')
+      })
     },
     clearLocalStorage () {
-      localStorage.removeItem('token')
-      this.$root.$emit('updateUser')
+      // this.$q.localStorage.localStorage.removeItem('token')
+      this.$root.$emit('updateUser', {})
     }
   },
 
@@ -540,11 +537,14 @@ export default {
         const dataCheckin = this.$moment(to, 'DD/MM/YYYY HH:mm')
         this.checkout = dataCheckin.add(12, 'hours').format('DD/MM/YYYY HH:mm')
       }
+    },
+    token (to, from) {
+      console.log('mudou token', to, from)
     }
   },
   created () {
     this.$root.$on('updateUser', this.updateUser)
-    this.updateUser()
+    // this.updateUser()
   }
 }
 </script>
