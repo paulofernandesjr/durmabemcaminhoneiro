@@ -87,7 +87,7 @@ export default {
     },
     async getBookings () {
       var config = {
-        headers: { Authorization: 'Bearer ' + this.token.access_token }
+        headers: { Authorization: 'Bearer ' + this.getToken.access_token }
       }
       // TODO: sair se não estiver autenticado
       // TODO: chamada no servidor
