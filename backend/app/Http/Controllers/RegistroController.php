@@ -48,23 +48,6 @@ class RegistroController extends Controller
             'celular' => ['required', 'string', 'celular_com_ddd', 'max:15'],
             'cpf' => ['required', 'string', 'formato_cpf', 'max:14', 'unique:motoristas'],
             'senha' => ['required', 'string', 'min:8'],
-            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:motoristas'],
-            'data_nascimento' => ['nullable', 'date'],
-            'numero_cnh' => ['nullable', 'string', 'min:11', 'max:11', 'regex:/^[0-9]+$/'],
-            'tags_cnh' => ['nullable', 'string'],
-            'vencimento_cnh' => ['nullable', 'date'],
-            'rntrc' => ['nullable', 'string', 'min:12', 'max:12', 'regex:/[A-Za-z]{3}-[0-9]{8}/'],
-            'cep' => ['nullable', 'formato_cep'],
-            'logradouro' => ['nullable', 'string', 'max:255'],
-            'numero' => ['nullable', 'string', 'max:20'],
-            'complemento' => ['nullable', 'string', 'max:255'],
-            'bairro' => ['nullable', 'string', 'max:255'],
-            'cidade_id' => ['nullable', 'integer'],
-            'estado_id' => ['nullable', 'integer'],
-            'cursos' => ['nullable', 'array'],
-            'cursos.*.descricao' => ['required', 'string'],
-            'cursos.*.nome' => ['required_without:cursos.*.curso_id', 'nullable', 'string'],
-            'cursos.*.curso_id' => ['required_without:cursos.*.nome', 'nullable', 'integer'],
         ]);
     }
 
@@ -77,7 +60,6 @@ class RegistroController extends Controller
     protected function create(array $data)
     {
         $motorista = (new Motorista)->fill($data)
-            ->padronizaRntrc()
             ->criptografaSenha()
             ->formatarCelular();
 
