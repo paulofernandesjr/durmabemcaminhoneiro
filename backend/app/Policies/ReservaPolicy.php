@@ -6,7 +6,6 @@ use App\Http\Controllers\ReservaController;
 use App\Models\Local;
 use App\Models\Motorista;
 use App\Models\Reserva;
-use App\Models\Usuario;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Http\Request;

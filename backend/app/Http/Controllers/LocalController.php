@@ -7,12 +7,20 @@ use App\Http\Requests\LocalRequest;
 use App\Models\Avaliacao;
 use App\Models\Estado;
 use App\Models\Local;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LocalController extends Controller
 {
     public function locais(Request $request)
     {
+        $dataChegadaDesejada = new Carbon($request->get('data_chegada_em'));
+        $dataSaidaDesejada = new Carbon($request->get('data_saida_em'));
+
+        if (!(new ReservaController)->validarData($dataChegadaDesejada, $dataSaidaDesejada)) {
+            abort(403);
+        }
+
         return LocalListing::new()
             ->setFilters($request->all())
             ->setColumns([
