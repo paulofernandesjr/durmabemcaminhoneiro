@@ -437,8 +437,11 @@ export default {
         return
       }
 
+      const checkinAmericano = this.$moment(this.checkin, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm')
+      const checkoutAmericano = this.$moment(this.checkout, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm')
+
       // Chamar Axios e mudar lista
-      this.lista = await this.$axios.get(`https://api.durmabemcaminhoneiro.com.br/api/locais?data_chegada_em=${this.checkin}&data_saida_em=${this.checkout}&rodovia=${this.rodovia}&sentido=${this.sentido}&estado=${this.estado}`)
+      this.lista = await this.$axios.get(`https://api.durmabemcaminhoneiro.com.br/api/locais?data_chegada_em=${checkinAmericano}&data_saida_em=${checkoutAmericano}&rodovia=${this.rodovia}&sentido=${this.sentido.toLowerCase()}&estado=${this.estado}`)
         .then((response) => {
           return response.data || []
         })
