@@ -46,6 +46,7 @@ class LocalController extends Controller
                     ->first();
 
                 unset($local->id);
+                $local->valor_estadia = str_replace('.', ',', $local->valor_estadia);
                 $local->tags = json_decode($local->tags, true);
                 $local->votos = $avaliacao->votos;
                 $local->avaliacao_media = (double) $avaliacao->avaliacao_media;

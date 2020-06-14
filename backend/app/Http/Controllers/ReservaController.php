@@ -30,6 +30,7 @@ class ReservaController extends Controller
                 'longitude',
             ])
             ->map(function ($local) {
+                $local->valor_estadia = str_replace('.', ',', $local->valor_estadia);
                 $local->tags = json_decode($local->tags, true);
 
                 return $local;
