@@ -9,11 +9,11 @@
       <q-item clickable v-ripple>
         <q-item-section side>
           <q-avatar size="48px">
-            <img src="https://cdn.quasar.dev/img/avatar.png" />
+            <img src="~/assets/adriel.png" />
           </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label>Adriel</q-item-label>
+          <q-item-label>Adriel Renato</q-item-label>
           <q-item-label caption>Backend</q-item-label>
         </q-item-section>
       </q-item>
@@ -21,11 +21,11 @@
       <q-item clickable v-ripple>
         <q-item-section side>
           <q-avatar size="48px">
-            <img src="https://cdn.quasar.dev/img/avatar.png" />
+            <img src="~/assets/leao.jpg" />
           </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label>Leão</q-item-label>
+          <q-item-label>Luís Leão</q-item-label>
           <q-item-label caption>Frontend</q-item-label>
         </q-item-section>
       </q-item>
@@ -33,11 +33,11 @@
       <q-item clickable v-ripple>
         <q-item-section side>
           <q-avatar size="48px">
-            <img src="https://cdn.quasar.dev/img/avatar.png" />
+            <img src="~/assets/paulo.jpg" />
           </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label>Paulo</q-item-label>
+          <q-item-label>Paulo Fernandes</q-item-label>
           <q-item-label caption>Marketing</q-item-label>
         </q-item-section>
       </q-item>
