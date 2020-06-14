@@ -421,7 +421,7 @@ export default {
       }
 
       // TODO: Chamar Axios e mudar lista
-      this.lista = await this.$axios.get(`https://api.durmabemcaminhoneiro.com.br/api/locais?data_chegada_em=2020-06-13%2019:00&data_saida_em=2020-06-14%2008:00&rodovia=BR-116&sentido=norte&estado=${this.estado}`)
+      this.lista = await this.$axios.get(`https://api.durmabemcaminhoneiro.com.br/api/locais?data_chegada_em=${this.checkin}&data_saida_em=${this.checkout}&rodovia=${this.rodovia}&sentido=${this.sentido}&estado=${this.estado}`)
         .then((response) => {
           return response.data || []
         })
@@ -429,7 +429,7 @@ export default {
           this.$q.notify({
             color: 'negative',
             position: 'top',
-            message: 'Erro ao carregar as cidades' + err,
+            message: 'Erro ao carregar os locais' + err,
             icon: 'report_problem'
           })
         })
@@ -446,8 +446,26 @@ export default {
       this.checkout = null
     },
     addReserva () {
+      var config = {
+        Authorization: 'Bearer ' + this.token.access_token // @TODO: Colocar Token de acesso
+      };
+
       // TODO: chamar Axios para reserva
-      console.log('adicionei reserva')
+      this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/reservas/' + this.localEscolhido, {
+        data_chegada_em: this.checkin,
+        data_saida_em: this.checkout
+      })
+      .then((response) => {
+        return response || {}
+      })
+      .catch((err) => {
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Erro ao reservar um local ' + err,
+          icon: 'report_problem'
+        })
+      })
     },
     showDialog (uuid) {
       // TODO: montar formulário de reserva

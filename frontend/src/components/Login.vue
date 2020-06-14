@@ -24,7 +24,76 @@
 export default {
   // name: 'ComponentName',
   data () {
-    return {}
+    return {
+      cpf: null,
+      senha: null,
+      client_id: '90ccb958-aa43-4c1b-9181-4f7f110f04f8',
+      client_secret: 'WSoX61q4Dt7EuXhyzAex5LTFra6tgqzNSjBo2NKR',
+      grant_type: 'password',
+      token: null,
+      motorista: null
+    }
+  },
+  methods: {
+    async logar() {
+      var config = {
+        headers: { Accept: '*/*' }
+      };
+
+      this.token = await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', {
+        client_id: this.client_id,
+        client_secret: this.client_secret,
+        grant_type: this.grant_type,
+        username: this.cpf,
+        password: this.senha,
+      }, config).then((response) => {
+        return response || []
+      })
+      .catch((err) => {
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Erro ao autenticar ' + err,
+          icon: 'report_problem'
+        })
+      })
+    },
+    async motorista() {
+      var config = {
+        headers: { Authorization: 'Bearer ' + this.token.access_token }
+      };
+
+      this.motorista = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/motorista',)
+        .then((response) => {
+          return response || {}
+        })
+        .catch((err) => {
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: 'Erro ao encontrar motorista logado ' + err,
+            icon: 'report_problem'
+          })
+        })
+    },
+    async cadastrar() {
+      await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/registrar', {
+        nome: null,
+        celular: null,
+        cpf: null,
+        senha: null
+      }).then(() => {
+        return
+      })
+      .catch((err) => {
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Erro ao cadastrar ' + err,
+          icon: 'report_problem'
+        })
+      })
+    }
   }
 }
 </script>
