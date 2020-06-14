@@ -21,7 +21,7 @@
           Durma Bem Caminhoneiro
         </q-toolbar-title>
 
-        <div>v 0.1</div>
+        <div>v 0.2</div>
       </q-toolbar>
     </q-header>
 
