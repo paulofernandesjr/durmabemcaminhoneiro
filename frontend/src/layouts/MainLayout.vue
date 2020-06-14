@@ -30,8 +30,45 @@
           header
           class="text-grey-8"
         >
+          Conheça o Projeto
+        </q-item-label>
+
+        <q-item
+          clickable
+          tag="a"
+          to="/"
+          v-if="this.$route.path !== '/'"
+        >
+          <q-item-section avatar >
+            <q-icon name="home" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>Página inicial</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          tag="a"
+          to="/sobre"
+        >
+          <q-item-section avatar >
+            <q-icon name="favorite" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>Sobre</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item-label
+          header
+          class="text-grey-8"
+        >
           Links do Projeto
         </q-item-label>
+
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -61,19 +98,6 @@ export default {
     return {
       leftDrawerOpen: false,
       essentialLinks: [
-        {
-          title: 'Página Inicial',
-          caption: 'Voltar para Home',
-          icon: 'home',
-          link: '/',
-          target: ''
-        },
-        {
-          title: 'Sobre',
-          icon: 'favorite',
-          link: '/sobre',
-          target: ''
-        },
         {
           title: 'Apresentação',
           icon: 'picture_as_pdf',

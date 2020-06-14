@@ -12,7 +12,7 @@
       :breakpoint="0"
       v-if="isAuthenticated && totalBookings > 0"
     >
-      <q-tab name="bookings" icon="alarm" v-if="totalBookings > 0">
+      <q-tab name="bookings" icon="event" v-if="totalBookings > 0">
         <q-badge color="red" floating v-if="totalBookings > 0">{{ totalBookings }}</q-badge>
       </q-tab>
       <q-tab name="search" icon="search" />
@@ -67,10 +67,10 @@ export default {
       return [null, undefined].indexOf(this.token.access_token) < 0
     }
   },
-  created () {
+  async created () {
     this.$root.$on('updateUser', this.updateUser)
     this.updateUser(JSON.parse(localStorage.getItem('token')) || {})
-    this.getBookings()
+    await this.getBookings()
     if (this.isAuthenticated && this.totalBookings) {
       this.tab = 'bookings'
     }
@@ -101,6 +101,11 @@ export default {
   watch: {
     token (to, from) {
       console.log('mudou token', to, from)
+    },
+    isAuthenticated (to, from) {
+      if (to && !from) {
+        this.getBookings()
+      }
     }
   }
 

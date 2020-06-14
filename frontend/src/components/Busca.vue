@@ -1,6 +1,9 @@
 <template>
   <div>
-    <q-dialog v-model="showReserva">
+    <q-dialog v-model="dialogLogin">
+      <Login hideCadastro="true" />
+    </q-dialog>
+    <q-dialog v-model="showReserva" full-width>
       <Login v-if="!isAuthenticated" />
       <Booking v-if="isAuthenticated" title="Confirmar Reserva" :booking="booking" :token="token" :checkin="checkin" :checkout="checkout" />
     </q-dialog>
@@ -139,6 +142,9 @@
           <!-- <p class="q-ma-none text-weight-light text-white bg-grey-6 q-pa-sm">Escolha a rodovia onde será seu trecho!</p> -->
         </q-item-section>
       </q-item>
+      <div class="text-center">
+        <q-btn v-if="!isAuthenticated" label="Acessar minha conta" outline @click="showDialogLogin" color="secondary" />
+      </div>
     </q-list>
     <q-pull-to-refresh @refresh="refresh">
       <q-list v-if="showResult && lista.length > 0" bordered>
@@ -298,22 +304,6 @@
         </q-card-actions>
       </q-card>
     </q-list>
-    <q-btn outline @click="clearLocalStorage" class="q-mt-lg" label="TESTE: limpar local storage" />
-
-    <!--
-    TODO: se não autenticado, exibir componente de login<br/>
-    TODO: se autenticado, exibir busca e reservas atuais<br/>
-    TODO: se autenticado, exibir sugestão de novo local<br/>
-    <ul>
-      <li>login/cadastro</li>
-      <li>busca de local</li>
-      <li>resultado de locais (com filtro e busca)</li>
-      <li>reserva de local de descanso</li>
-      <li>sugerir novo local</li>
-    </ul>
-
-    // data saida automatica = 1º + 12 horas
- -->
   </div>
 </template>
 
@@ -358,7 +348,8 @@ export default {
       showResult: false,
       showReserva: false,
       lista: [
-      ]
+      ],
+      dialogLogin: false
     }
   },
   computed: {
@@ -426,6 +417,13 @@ export default {
     async refresh (done) {
       await this.search()
       done()
+    },
+    showDialogLogin () {
+      this.dialogLogin = true
+    },
+    hideDialogLogin () {
+      console.log('ocultar login')
+      this.dialogLogin = false
     },
     async search () {
       // Validar dados
@@ -517,6 +515,7 @@ export default {
   },
   created () {
     this.$root.$on('updateUser', this.updateUser)
+    this.$root.$on('hideDialogLogin', this.hideDialogLogin)
     // this.updateUser()
   }
 }

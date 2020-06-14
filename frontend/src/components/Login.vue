@@ -3,7 +3,7 @@
     <q-card class="q-pa-md">
       <h6 class="q-mt-none q-mb-lg">Use uma conta para reservar!</h6>
       <div class="q-gutter-md q-mb-lg">
-        <q-input filled v-model.trim="cpf" mask="###.###.###-##" label="CPF" stack-label :error="$v.cpf.$error" />
+        <q-input filled autofocus v-model.trim="cpf" mask="###.###.###-##" label="CPF" stack-label :error="$v.cpf.$error" />
         <q-input filled v-model.trim="nome" label="Nome" stack-label v-if="modo === 'cadastro'" :error="$v.nome.$error" />
         <q-input filled v-model.trim="celular" mask="(##) #####-####" label="Celular" stack-label v-if="modo === 'cadastro'" :error="$v.celular.$error" />
         <q-input filled v-model.trim="senha" label="Senha" type="password" stack-label :error="$v.senha.$error" />
@@ -12,7 +12,7 @@
           <q-btn @click="submit" :label="modo === 'login' ? 'Entrar' : 'Cadastrar'" color="primary" />
         </div>
       </div>
-      <q-btn flat class="full-width" @click="toggleModo" :label="modo === 'login' ? 'nova conta' : 'Usar conta existente'" />
+      <q-btn v-if="!hideCadastro" flat class="full-width" @click="toggleModo" :label="modo === 'login' ? 'nova conta' : 'Usar conta existente'" />
     </q-card>
     <!-- Login<br/>
     TODO: chamada de login e salvar token<br/>
@@ -26,7 +26,7 @@ import { validaCpf } from '../utils/validaCpf'
 
 export default {
   name: 'Login',
-  props: ['token'],
+  props: ['token', 'hideCadastro'],
   data () {
     return {
       modo: 'login',
@@ -117,6 +117,7 @@ export default {
       await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', bodyFormData, config).then((response) => {
         console.log('RESPOSTA LOGIN', response)
         this.$root.$emit('updateUser', response.data || {})
+        this.$root.$emit('hideDialogLogin', {})
         return response || {}
       }).catch(() => {
         this.$root.$emit('updateUser', {})

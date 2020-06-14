@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-card class="my-card q-mt-md">
+    <q-card class="my-card q-mb-md">
       <q-card-section>
         <div class="row no-wrap items-center">
           <div class="col text-h6 ellipsis">
@@ -20,14 +20,14 @@
           {{ booking.rodovia}}, KM {{ booking.km }}, {{ booking.cidade_nome }}/{{ booking.estado_uf }}
         </div>
         <div class="row q-mt-sm">
-          <div class="text-caption text-grey" v-if="booking.data_chegada_em && title == 'Reserva'">
-            Chegada: {{ booking.data_chegada_em }}
+          <div class="text-caption text-grey" v-if="booking.data_chegada_em || checkin">
+            Chegada: {{ booking.data_chegada_em ? booking.data_chegada_em : checkin }}
           </div>
 
         </div>
         <div class="row">
-          <div class="text-caption text-grey" v-if="booking.data_saida_em && title == 'Reserva'">
-            Saída: {{ booking.data_saida_em }}
+          <div class="text-caption text-grey" v-if="booking.data_saida_em || checkout">
+            Saída: {{ booking.data_saida_em ? booking.data_saida_em : checkout }}
           </div>
         </div>
         <div class="q-gutter-md text-blue q-mt-sm" v-if="title == 'Reserva'">
