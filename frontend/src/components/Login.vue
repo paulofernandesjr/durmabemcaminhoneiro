@@ -5,7 +5,7 @@
       <div class="q-gutter-md q-mb-lg">
         <q-input filled v-model.trim="cpf" mask="###.###.###-##" label="CPF" stack-label :error="$v.cpf.$error" />
         <q-input filled v-model.trim="nome" label="Nome" stack-label v-if="modo === 'cadastro'" :error="$v.nome.$error" />
-        <q-input filled v-model.trim="celular" label="Celular" stack-label v-if="modo === 'cadastro'" :error="$v.celular.$error" />
+        <q-input filled v-model.trim="celular" mask="(##) #####-####" label="Celular" stack-label v-if="modo === 'cadastro'" :error="$v.celular.$error" />
         <q-input filled v-model.trim="senha" label="Senha" type="password" stack-label :error="$v.senha.$error" />
         <q-input filled v-model.trim="confirmarSenha" label="Confirmar Senha" type="password" stack-label v-if="modo === 'cadastro'" :error="$v.confirmarSenha.$error" />
         <div class="text-right">
@@ -47,14 +47,20 @@ export default {
       validaCpf
     },
     celular: {
-      required: requiredIf(nM => nM.modo === 'cadastro')
+      required: requiredIf(nM => nM.modo === 'cadastro'),
+      formatoCelular (numero) {
+        if (numero) {
+          return numero.length === 15
+        }
+        return true
+      }
     },
     nome: {
       required: requiredIf(nM => nM.modo === 'cadastro')
     },
     senha: {
       required,
-      minLength: minLength(6)
+      minLength: minLength(8)
     },
     confirmarSenha: {
       required: requiredIf(nM => nM.modo === 'cadastro'),
@@ -112,12 +118,12 @@ export default {
         console.log('RESPOSTA LOGIN', response)
         this.$root.$emit('updateUser', response.data || {})
         return response || {}
-      }).catch((err) => {
+      }).catch(() => {
         this.$root.$emit('updateUser', {})
         this.$q.notify({
           color: 'negative',
           position: 'top',
-          message: 'Erro ao autenticar ' + err,
+          message: 'Erro ao autenticar',
           icon: 'report_problem'
         })
       })
@@ -131,27 +137,30 @@ export default {
         .then((response) => {
           return response || {}
         }).catch((err) => {
+          const errsString = Object.keys(err.response.data.errors).map(e => err.response.data.errors[e].join()).join()
           this.$q.notify({
             color: 'negative',
             position: 'top',
-            message: 'Erro ao encontrar motorista logado ' + err,
+            message: 'Erro ao encontrar motorista logado ' + errsString,
             icon: 'report_problem'
           })
         })
     },
     async cadastrar () {
       await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/registrar', {
-        nome: null,
-        celular: null,
-        cpf: null,
-        senha: null
+        nome: this.nome,
+        celular: this.celular,
+        cpf: this.cpf,
+        senha: this.senha
       }).then(() => {
         this.logar()
       }).catch((err) => {
+        this.$root.$emit('updateUser', {})
+        const errsString = Object.keys(err.response.data.errors).map(e => err.response.data.errors[e].join()).join()
         this.$q.notify({
           color: 'negative',
           position: 'top',
-          message: 'Erro ao cadastrar ' + err,
+          message: 'Erro ao cadastrar ' + errsString,
           icon: 'report_problem'
         })
       })
