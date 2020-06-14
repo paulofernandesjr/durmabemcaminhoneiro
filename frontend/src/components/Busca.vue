@@ -2,7 +2,7 @@
   <div>
     <q-dialog v-model="showReserva">
       <Login v-if="!isAuthenticated" />
-      <Booking v-if="isAuthenticated" :booking="booking" :token="getToken" :checkin="checkin" :checkout="checkout" />
+      <Booking v-if="isAuthenticated" :booking="booking" :token="token" :checkin="checkin" :checkout="checkout" />
     </q-dialog>
     <q-card class="q-mb-sm" v-if="!showResult">
       <q-card-section class="q-pb-none">
