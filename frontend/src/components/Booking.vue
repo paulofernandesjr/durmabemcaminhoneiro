@@ -95,7 +95,7 @@ export default {
           message: 'O local foi reservado com sucesso!',
           icon: 'done'
         })
-        this.$root.$emit('updateReservas')
+        this.$root.$emit('getBookings', true)
 
         return true
       }).catch((err) => {
