@@ -29,7 +29,7 @@
         <Login />
       </q-tab-panel>
       <q-tab-panel name="search">
-        <Busca />
+        <Busca token="getToken" />
       </q-tab-panel>
     </q-tab-panels>
 
