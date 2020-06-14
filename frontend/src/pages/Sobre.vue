@@ -38,7 +38,7 @@
         </q-item-section>
         <q-item-section>
           <q-item-label>Paulo Fernandes</q-item-label>
-          <q-item-label caption>Marketing</q-item-label>
+          <q-item-label caption>Negócios</q-item-label>
         </q-item-section>
       </q-item>
 
