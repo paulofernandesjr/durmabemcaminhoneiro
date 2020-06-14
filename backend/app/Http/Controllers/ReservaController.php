@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Listing\ReservaListing;
 use App\Http\Requests\ReservaRequest;
 use App\Models\Local;
 use App\Models\Reserva;
@@ -10,6 +11,32 @@ use Illuminate\Http\Request;
 
 class ReservaController extends Controller
 {
+    public function reservas(Request $request)
+    {
+        return ReservaListing::new()
+            ->setFilters($request->all())
+            ->setColumns([
+                'uuid',
+                'data_chegada_em',
+                'data_saida_em',
+                'nome',
+                'estado_uf',
+                'cidade_nome',
+                'rodovia',
+                'km',
+                'tags',
+                'valor_estadia',
+                'latitude',
+                'longitude',
+            ])
+            ->map(function ($local) {
+                $local->tags = json_decode($local->tags, true);
+
+                return $local;
+            })
+            ->collect();
+    }
+
     public function reservar(ReservaRequest $request, $localUuid)
     {
         $local = Local::where('uuid', $localUuid)
