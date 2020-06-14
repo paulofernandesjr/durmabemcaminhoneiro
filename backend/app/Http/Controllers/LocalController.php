@@ -4,17 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Core\Listing\LocalListing;
 use App\Http\Requests\LocalRequest;
+use App\Models\Avaliacao;
 use App\Models\Estado;
 use App\Models\Local;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LocalController extends Controller
 {
     public function locais(Request $request)
     {
+        $dataChegadaDesejada = new Carbon($request->get('data_chegada_em'));
+        $dataSaidaDesejada = new Carbon($request->get('data_saida_em'));
+
+        if (!(new ReservaController)->validarData($dataChegadaDesejada, $dataSaidaDesejada)) {
+            abort(403);
+        }
+
         return LocalListing::new()
             ->setFilters($request->all())
             ->setColumns([
+                'id',
                 'uuid',
                 'nome',
                 'estado_uf',
@@ -30,7 +40,16 @@ class LocalController extends Controller
                 'nome' => 'asc'
             ])
             ->map(function ($local) {
+                $avaliacao = Avaliacao::query()
+                    ->selectRaw('count(avaliacoes.id) as votos, (sum(avaliacoes.nota) / count(avaliacoes.id)) as avaliacao_media')
+                    ->where('local_id', $local->id)
+                    ->first();
+
+                unset($local->id);
                 $local->tags = json_decode($local->tags, true);
+                $local->votos = $avaliacao->votos;
+                $local->avaliacao_media = (double) $avaliacao->avaliacao_media;
+                $local->aceita_reserva = (bool) $local->aceita_reserva;
                 
                 return $local;
             })

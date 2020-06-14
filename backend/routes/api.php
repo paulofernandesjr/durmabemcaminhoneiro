@@ -19,3 +19,12 @@ Route::get('/estados', 'EstadoController@listar');
 Route::get('/cidades/listar_por_estado', 'CidadeController@listarCidadesPorEstado');
 
 Route::get('/locais', 'LocalController@locais');
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/motorista', 'MotoristaController@motorista');
+    
+    Route::post('/avaliar/{local}', 'AvaliacaoController@avaliar');
+
+    Route::post('/reservas/{local}', 'ReservaController@reservar');
+});
+

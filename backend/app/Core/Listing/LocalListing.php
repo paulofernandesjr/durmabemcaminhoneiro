@@ -9,6 +9,7 @@ class LocalListing extends Listing implements InterfaceListing
     public function availableColumns()
     {
         return [
+            'id' => 'locais.id',
             'uuid' => 'locais.uuid',
             'nome' => 'locais.nome',
             'estado_uf' => 'estados.uf',
