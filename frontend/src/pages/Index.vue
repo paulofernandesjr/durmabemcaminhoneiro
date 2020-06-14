@@ -69,7 +69,7 @@ export default {
   },
   created () {
     this.$root.$on('updateUser', this.updateUser)
-    this.updateUser(JSON.parse(this.$q.localStorage.getItem('token')) || {})
+    this.updateUser(JSON.parse(localStorage.getItem('token')) || {})
     this.getBookings()
     if (this.isAuthenticated && this.totalBookings) {
       this.tab = 'bookings'
@@ -78,9 +78,8 @@ export default {
   methods: {
     updateUser (newToken) {
       console.log('UPDATE USER INDEX')
+      localStorage.setItem('token', JSON.stringify(newToken))
       this.token = newToken
-      // TODO: salvar no localStorage
-      // JSON.parse(this.$q.localStorage.getItem('token')) || {}
     },
     async getBookings () {
       if (!this.isAuthenticated) {

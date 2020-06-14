@@ -493,7 +493,6 @@ export default {
       })
     },
     clearLocalStorage () {
-      // this.$q.localStorage.localStorage.removeItem('token')
       this.$root.$emit('updateUser', {})
     }
   },
