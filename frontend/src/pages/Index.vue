@@ -23,7 +23,7 @@
       swipeable
     >
       <q-tab-panel name="bookings" v-if="isAuthenticated">
-        <Booking v-for="booking in bookings" v-bind:key="booking.uuid" :booking="booking" />
+        <Booking v-for="booking in bookings" v-bind:key="booking.uuid" :booking="booking" title="Reserva" />
       </q-tab-panel>
       <q-tab-panel name="bookings" v-if="!isAuthenticated">
       </q-tab-panel>
@@ -91,10 +91,10 @@ export default {
       }
 
       // https://api.durmabemcaminhoneiro.com.br/api/reservas
-      this.bookings = this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/reservas', { headers: config })
+      this.bookings = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/reservas', { headers: config })
         .then((response) => {
           console.log('bookings', response)
-          return response || []
+          return response.data || []
         })
     }
   },

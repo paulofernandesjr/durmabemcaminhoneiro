@@ -30,11 +30,17 @@ class ReservaController extends Controller
                 'longitude',
             ])
             ->map(function ($local) {
+                $local->data_chegada_em = (new Carbon($local->data_chegada_em))->format('d/m/Y H:i');
+                $local->data_saida_em = (new Carbon($local->data_saida_em))->format('d/m/Y H:i');
                 $local->valor_estadia = str_replace('.', ',', $local->valor_estadia);
                 $local->tags = json_decode($local->tags, true);
 
                 return $local;
             })
+            ->setColumns([
+                'data_chegada_em' => 'asc',
+                'data_saida_em' => 'asc'
+            ])
             ->collect();
     }
 

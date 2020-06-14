@@ -2,7 +2,7 @@
   <div>
     <q-dialog v-model="showReserva">
       <Login v-if="!isAuthenticated" />
-      <Booking v-if="isAuthenticated" :booking="booking" :token="token" :checkin="checkin" :checkout="checkout" />
+      <Booking v-if="isAuthenticated" title="Confirmar Reserva" :booking="booking" :token="token" :checkin="checkin" :checkout="checkout" />
     </q-dialog>
     <q-card class="q-mb-sm" v-if="!showResult">
       <q-card-section class="q-pb-none">
@@ -298,7 +298,6 @@
         </q-card-actions>
       </q-card>
     </q-list>
-    <q-btn outline @click="setLocalStorage" class="q-mt-lg" label="TESTE: definir local storage" />
     <q-btn outline @click="clearLocalStorage" class="q-mt-lg" label="TESTE: limpar local storage" />
 
     <!--
@@ -484,13 +483,6 @@ export default {
     },
     updateUser () {
       console.log('UPDATE USER BUSCA!')
-    },
-    setLocalStorage () {
-      this.$root.$emit('updateUser', {
-        token_type: 'Bearer',
-        expires_in: 31536000,
-        access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGNjOTU5ZC05MDJhLTRiZDgtOWJiNi1iYTRiZGNjYTEwMDIiLCJqdGkiOiJiNmRiODAwMzg4MTMxMjJjZjE3YmVhNjEyM2E1NTY5MTVjNGVhMTE2ZDIzMjgxN2YwMWQ2MTU5YmU0MTM2NjU3NjYwYjAyN2Q3MTU2NGJjOSIsImlhdCI6MTU5MjA4MzYwMSwibmJmIjoxNTkyMDgzNjAxLCJleHAiOjE2MjM2MTk2MDEsInN1YiI6IjIiLCJzY29wZXMiOltdfQ.P43Z-Knb1edzyWzmNoLmSv4bTyzSscrI1tE5DyPC5TURNaE38e5u6eDgJ6Wf-0J-P1uXs4s3nIkmUcwqBtTWxGj5odsGiQjUSjKOD2TmI'
-      })
     },
     clearLocalStorage () {
       this.$root.$emit('updateUser', {})
