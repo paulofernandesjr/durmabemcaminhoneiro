@@ -92,7 +92,7 @@ export default {
       // TODO: sair se não estiver autenticado
       // TODO: chamada no servidor
       // https://api.durmabemcaminhoneiro.com.br/api/reservas
-      this.bookings = this.$axiso.get('https://api.durmabemcaminhoneiro.com.br/api/reservas', { headers: config })
+      this.bookings = this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/reservas', { headers: config })
         .then((response) => {
           return response || []
         })
