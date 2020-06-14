@@ -58,7 +58,8 @@ export default {
     return {
       tab: 'search',
       bookings: [
-      ]
+      ],
+      token: {}
     }
   },
   computed: {
@@ -69,13 +70,21 @@ export default {
       return this.getToken.access_token || false
     },
     getToken () {
-      return JSON.parse(this.$q.localStorage.getItem('token')) || {}
+      return this.token
     }
   },
   created () {
     this.getBookings()
+    this.$root.$on('updateUser', this.updateUser)
+    this.updateUser()
+    if (this.isAuthenticated && this.totalBookings) {
+      this.tab = 'bookings'
+    }
   },
   methods: {
+    updateUser () {
+      this.token = JSON.parse(this.$q.localStorage.getItem('token')) || {}
+    },
     getBookings () {
       // TODO: sair se não estiver autenticado
       // TODO: chamada no servidor

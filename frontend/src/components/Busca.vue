@@ -566,6 +566,7 @@ export default {
         expires_in: 31536000,
         access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MGNjOTU5ZC05MDJhLTRiZDgtOWJiNi1iYTRiZGNjYTEwMDIiLCJqdGkiOiJiNmRiODAwMzg4MTMxMjJjZjE3YmVhNjEyM2E1NTY5MTVjNGVhMTE2ZDIzMjgxN2YwMWQ2MTU5YmU0MTM2NjU3NjYwYjAyN2Q3MTU2NGJjOSIsImlhdCI6MTU5MjA4MzYwMSwibmJmIjoxNTkyMDgzNjAxLCJleHAiOjE2MjM2MTk2MDEsInN1YiI6IjIiLCJzY29wZXMiOltdfQ.P43Z-Knb1edzyWzmNoLmSv4bTyzSscrI1tE5DyPC5TURNaE38e5u6eDgJ6Wf-0J-P1uXs4s3nIkmUcwqBtTWxGj5odsGiQjUSjKOD2TmI'
       }))
+      this.$root.$emit('updateUser')
     }
   },
 
