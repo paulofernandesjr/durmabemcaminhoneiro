@@ -108,7 +108,7 @@ export default {
       bodyFormData.set('password', this.senha)
       console.log('bodyFormData', bodyFormData)
 
-      await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', bodyFormData, { headers: config }).then((response) => {
+      await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', bodyFormData, config).then((response) => {
         console.log('RESPOSTA LOGIN', response)
         // this.$q.localStorage.localStorage.setItem('token', JSON.stringify(response.data || {}))
         this.$root.$emit('updateUser', response.data || {})
@@ -128,7 +128,7 @@ export default {
         headers: { Authorization: 'Bearer ' + this.token.access_token }
       }
 
-      this.motorista = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/motorista', { headers: config })
+      this.motorista = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/motorista', config)
         .then((response) => {
           return response || {}
         }).catch((err) => {
