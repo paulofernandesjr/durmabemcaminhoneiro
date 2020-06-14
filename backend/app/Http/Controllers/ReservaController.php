@@ -25,6 +25,7 @@ class ReservaController extends Controller
                 'rodovia',
                 'km',
                 'tags',
+                'valor_estadia',
                 'latitude',
                 'longitude',
             ])

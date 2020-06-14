@@ -18,6 +18,7 @@ class ReservaListing extends Listing implements InterfaceListing
             'rodovia' => 'locais.rodovia',
             'km' => 'locais.km',
             'tags' => 'locais.tags',
+            'valor_estadia' => 'locais.valor_estadia',
             'latitude' => 'locais.latitude',
             'longitude' => 'locais.longitude',
         ];
