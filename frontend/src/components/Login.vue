@@ -35,21 +35,20 @@ export default {
     }
   },
   methods: {
-    async logar() {
+    async logar () {
       var config = {
         headers: { Accept: '*/*' }
-      };
+      }
 
       this.token = await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', {
         client_id: this.client_id,
         client_secret: this.client_secret,
         grant_type: this.grant_type,
         username: this.cpf,
-        password: this.senha,
+        password: this.senha
       }, config).then((response) => {
         return response || []
-      })
-      .catch((err) => {
+      }).catch((err) => {
         this.$q.notify({
           color: 'negative',
           position: 'top',
@@ -58,16 +57,15 @@ export default {
         })
       })
     },
-    async motorista() {
+    async carregarMotorista () {
       var config = {
         headers: { Authorization: 'Bearer ' + this.token.access_token }
-      };
+      }
 
-      this.motorista = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/motorista',)
+      this.motorista = await this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/motorista', config)
         .then((response) => {
           return response || {}
-        })
-        .catch((err) => {
+        }).catch((err) => {
           this.$q.notify({
             color: 'negative',
             position: 'top',
@@ -76,16 +74,13 @@ export default {
           })
         })
     },
-    async cadastrar() {
+    async cadastrar () {
       await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/registrar', {
         nome: null,
         celular: null,
         cpf: null,
         senha: null
-      }).then(() => {
-        return
-      })
-      .catch((err) => {
+      }).catch((err) => {
         this.$q.notify({
           color: 'negative',
           position: 'top',

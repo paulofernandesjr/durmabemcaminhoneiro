@@ -448,17 +448,15 @@ export default {
     addReserva () {
       var config = {
         Authorization: 'Bearer ' + this.token.access_token // @TODO: Colocar Token de acesso
-      };
+      }
 
       // TODO: chamar Axios para reserva
       this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/reservas/' + this.localEscolhido, {
         data_chegada_em: this.checkin,
         data_saida_em: this.checkout
-      })
-      .then((response) => {
+      }, config).then((response) => {
         return response || {}
-      })
-      .catch((err) => {
+      }).catch((err) => {
         this.$q.notify({
           color: 'negative',
           position: 'top',
