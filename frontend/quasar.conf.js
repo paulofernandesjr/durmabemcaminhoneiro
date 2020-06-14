@@ -25,6 +25,8 @@ module.exports = function (/* ctx */) {
       'firebase',
       'authRouter',
       'axios',
+      'moment',
+      'vuelidate'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
