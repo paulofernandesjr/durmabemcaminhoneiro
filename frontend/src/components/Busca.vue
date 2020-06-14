@@ -205,8 +205,8 @@
             <q-btn label="reservar" @click="showDialog(item.uuid)" rounded color="primary" :disabled="item.vagas_disponiveis === 0" />
           </q-item-section>
         </q-item>
+        <q-separator spaced inset />
       </div>
-      <q-separator spaced inset />
 
     </q-list>
     <q-list v-if="false && showResult" bordered class="q-my-lg">
@@ -421,9 +421,9 @@ export default {
       }
 
       // TODO: Chamar Axios e mudar lista
-      this.lista = await this.$axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.estado}/municipios`)
+      this.lista = await this.$axios.get(`https://api.durmabemcaminhoneiro.com.br/api/locais?data_chegada_em=2020-06-13%2019:00&data_saida_em=2020-06-14%2008:00&rodovia=BR-116&sentido=norte&estado=${this.estado}`)
         .then((response) => {
-          return response
+          return response.data || []
         })
         .catch((err) => {
           this.$q.notify({
