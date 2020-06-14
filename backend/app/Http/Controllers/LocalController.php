@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Core\Listing\LocalListing;
 use App\Http\Requests\LocalRequest;
-use App\Models\Avaliacao;
 use App\Models\Estado;
 use App\Models\Local;
 use Carbon\Carbon;
@@ -34,22 +33,19 @@ class LocalController extends Controller
                 'aceita_reserva',
                 'valor_estadia',
                 'tags',
-                'vagas_disponiveis'
+                'vagas_disponiveis',
+                'votos',
+                'avaliacao_media'
             ])
             ->setOrders([
+                'aceita_reserva' => 'desc',
+                'avaliacao_media' => 'desc',
                 'nome' => 'asc'
             ])
             ->map(function ($local) {
-                $avaliacao = Avaliacao::query()
-                    ->selectRaw('count(avaliacoes.id) as votos, (sum(avaliacoes.nota) / count(avaliacoes.id)) as avaliacao_media')
-                    ->where('local_id', $local->id)
-                    ->first();
-
-                unset($local->id);
                 $local->valor_estadia = str_replace('.', ',', $local->valor_estadia);
                 $local->tags = json_decode($local->tags, true);
-                $local->votos = $avaliacao->votos;
-                $local->avaliacao_media = (double) $avaliacao->avaliacao_media;
+                $local->avaliacao_media = (double) $local->avaliacao_media;
                 $local->aceita_reserva = (bool) $local->aceita_reserva;
                 
                 return $local;

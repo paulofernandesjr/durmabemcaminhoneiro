@@ -9,7 +9,6 @@ class LocalListing extends Listing implements InterfaceListing
     public function availableColumns()
     {
         return [
-            'id' => 'locais.id',
             'uuid' => 'locais.uuid',
             'nome' => 'locais.nome',
             'estado_uf' => 'estados.uf',
@@ -19,7 +18,9 @@ class LocalListing extends Listing implements InterfaceListing
             'aceita_reserva' => 'locais.aceita_reserva',
             'valor_estadia' => 'locais.valor_estadia',
             'tags' => 'locais.tags',
-            'vagas_disponiveis' => DB::raw($this->vagasDisponiveisSql())
+            'vagas_disponiveis' => DB::raw($this->vagasDisponiveisSql()),
+            'votos' => DB::raw($this->votosSql()),
+            'avaliacao_media' => DB::raw($this->avaliacaoMediaSql())
         ];
     }
 
@@ -53,7 +54,7 @@ class LocalListing extends Listing implements InterfaceListing
         return $query;
     }
 
-    public function vagasDisponiveisSql()
+    private function vagasDisponiveisSql()
     {
         $dataChegada = $this->getFilter('data_chegada_em');
         $dataSaida = $this->getFilter('data_chegada_em');
@@ -65,5 +66,15 @@ class LocalListing extends Listing implements InterfaceListing
                 or (data_chegada_em <= \''.$dataChegada.'\' and data_saida_em > \''.$dataChegada.'\')
             )
         ))';
+    }
+
+    private function votosSql()
+    {
+        return '(SELECT count(avaliacoes.id) FROM avaliacoes WHERE avaliacoes.local_id = locais.id)';
+    }
+
+    private function avaliacaoMediaSql()
+    {
+        return '(SELECT (sum(avaliacoes.nota) / count(avaliacoes.id)) FROM avaliacoes WHERE avaliacoes.local_id = locais.id)';
     }
 }
