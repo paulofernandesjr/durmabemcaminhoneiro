@@ -21,7 +21,7 @@
           Durma Bem Caminhoneiro
         </q-toolbar-title>
 
-        <div>v 0.3</div>
+        <div>v 0.4</div>
       </q-toolbar>
     </q-header>
 
@@ -109,12 +109,12 @@ export default {
         {
           title: 'Apresentação',
           icon: 'picture_as_pdf',
-          link: 'https://PDF'
+          link: 'https://drive.google.com/file/d/14wZ9wcrd36nFAe67DFKCWinnqOvJnBz0/view?usp=sharing'
         },
         {
           title: 'Vídeo',
           icon: 'movie',
-          link: 'https://youtu.be/XYZABC'
+          link: 'https://youtu.be/_59ppY3PLCU'
         },
         {
           title: 'Github',
