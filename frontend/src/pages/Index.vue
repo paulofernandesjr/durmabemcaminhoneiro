@@ -91,7 +91,7 @@ export default {
       var config = {
         Authorization: `${this.getToken.token_type} ${this.getToken.access_token}` // @TODO: Colocar Token de acesso
       }
-      
+
       // https://api.durmabemcaminhoneiro.com.br/api/reservas
       this.bookings = this.$axios.get('https://api.durmabemcaminhoneiro.com.br/api/reservas', { headers: config })
         .then((response) => {
