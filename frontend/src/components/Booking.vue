@@ -89,7 +89,14 @@ export default {
         data_chegada_em: checkinAmericano,
         data_saida_em: checkoutAmericano
       }, { headers: config }).then((response) => {
-        this.$root.$emit('getBookings', true)
+        this.$q.notify({
+          color: 'positive',
+          position: 'top',
+          message: 'O local foi reservado com sucesso!',
+          icon: 'done'
+        })
+        this.$root.$emit('updateReservas')
+
         return true
       }).catch((err) => {
         this.$q.notify({
