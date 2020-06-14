@@ -1,5 +1,11 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="base">
+    <q-ajax-bar
+      ref="bar"
+      position="bottom"
+      color="accent"
+      size="10px"
+    />
     <q-header >
       <q-toolbar>
         <q-btn

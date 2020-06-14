@@ -3,9 +3,9 @@
     <q-card class="q-pa-md">
       <h6 class="q-mt-none q-mb-lg">Use uma conta para reservar!</h6>
       <div class="q-gutter-md q-mb-lg">
-        <q-input filled autofocus v-model.trim="cpf" mask="###.###.###-##" label="CPF" stack-label :error="$v.cpf.$error" />
+        <q-input type="tel" filled autofocus v-model.trim="cpf" mask="###.###.###-##" label="CPF" stack-label :error="$v.cpf.$error" />
         <q-input filled v-model.trim="nome" label="Nome" stack-label v-if="modo === 'cadastro'" :error="$v.nome.$error" />
-        <q-input filled v-model.trim="celular" mask="(##) #####-####" label="Celular" stack-label v-if="modo === 'cadastro'" :error="$v.celular.$error" />
+        <q-input type="tel" filled v-model.trim="celular" mask="(##) #####-####" label="Celular" stack-label v-if="modo === 'cadastro'" :error="$v.celular.$error" />
         <q-input filled v-model.trim="senha" label="Senha" type="password" stack-label :error="$v.senha.$error" />
         <q-input filled v-model.trim="confirmarSenha" label="Confirmar Senha" type="password" stack-label v-if="modo === 'cadastro'" :error="$v.confirmarSenha.$error" />
         <div class="text-right">

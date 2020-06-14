@@ -69,6 +69,8 @@ export default {
   },
   async created () {
     this.$root.$on('updateUser', this.updateUser)
+    this.$root.$on('getBookings', this.getBookings)
+
     this.updateUser(JSON.parse(localStorage.getItem('token')) || {})
     await this.getBookings()
     if (this.isAuthenticated && this.totalBookings) {
@@ -81,7 +83,10 @@ export default {
       localStorage.setItem('token', JSON.stringify(newToken))
       this.token = newToken
     },
-    async getBookings () {
+    changeTab (newTab) {
+      this.tab = newTab
+    },
+    async getBookings (changeTab) {
       if (!this.isAuthenticated) {
         console.log('NAO AUTENTICADO!!!')
         return
@@ -96,6 +101,9 @@ export default {
           console.log('bookings', response)
           return response.data || []
         })
+      if (changeTab) {
+        this.tab = 'bookings'
+      }
     }
   },
   watch: {

@@ -89,8 +89,7 @@ export default {
         data_chegada_em: checkinAmericano,
         data_saida_em: checkoutAmericano
       }, { headers: config }).then((response) => {
-        this.$root.$emit('updateReservas')
-
+        this.$root.$emit('getBookings', true)
         return true
       }).catch((err) => {
         this.$q.notify({
