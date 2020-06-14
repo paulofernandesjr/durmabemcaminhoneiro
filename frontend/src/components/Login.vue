@@ -3,13 +3,13 @@
     <q-card class="q-pa-md">
       <h6 class="q-mt-none q-mb-lg">Use uma conta para reservar!</h6>
       <div class="q-gutter-md q-mb-lg">
-        <q-input filled v-model.trim="cpf" label="CPF" stack-label />
-        <q-input filled v-model.trim="nome" label="Nome" stack-label v-if="modo === 'cadastro'" />
-        <q-input filled v-model.trim="celular" label="Celular" stack-label v-if="modo === 'cadastro'" />
-        <q-input filled v-model.trim="senha" label="Senha" type="password" stack-label />
-        <q-input filled v-model.trim="confirmarSenha" label="Confirmar Senha" type="password" stack-label v-if="modo === 'cadastro'" />
+        <q-input filled v-model.trim="cpf" mask="###.###.###-##" label="CPF" stack-label :error="$v.cpf.$error" />
+        <q-input filled v-model.trim="nome" label="Nome" stack-label v-if="modo === 'cadastro'" :error="$v.nome.$error" />
+        <q-input filled v-model.trim="celular" label="Celular" stack-label v-if="modo === 'cadastro'" :error="$v.celular.$error" />
+        <q-input filled v-model.trim="senha" label="Senha" type="password" stack-label :error="$v.senha.$error" />
+        <q-input filled v-model.trim="confirmarSenha" label="Confirmar Senha" type="password" stack-label v-if="modo === 'cadastro'" :error="$v.confirmarSenha.$error" />
         <div class="text-right">
-          <q-btn :label="modo === 'login' ? 'Entrar' : 'Cadastrar'" color="primary" />
+          <q-btn @click="submit" :label="modo === 'login' ? 'Entrar' : 'Cadastrar'" color="primary" />
         </div>
       </div>
       <q-btn flat class="full-width" @click="toggleModo" :label="modo === 'login' ? 'nova conta' : 'Usar conta existente'" />
@@ -21,6 +21,9 @@
 </template>
 
 <script>
+import { required, requiredIf, sameAs, minLength } from 'vuelidate/lib/validators'
+import { validaCpf } from '../utils/validaCpf'
+
 export default {
   name: 'Login',
   data () {
@@ -38,13 +41,64 @@ export default {
       motorista: null
     }
   },
+  validations: {
+    cpf: {
+      required, // TODO: validar CPF
+      validaCpf
+    },
+    celular: {
+      required: requiredIf(nM => nM.modo === 'cadastro')
+    },
+    nome: {
+      required: requiredIf(nM => nM.modo === 'cadastro')
+    },
+    senha: {
+      required,
+      minLength: minLength(6)
+    },
+    confirmarSenha: {
+      required: requiredIf(nM => nM.modo === 'cadastro'),
+      sameAsPassword: sameAs('senha')
+    }
+  },
   methods: {
     toggleModo () {
+      this.$v.$reset()
       this.modo = this.modo === 'login' ? 'cadastro' : 'login'
+      this.cpf = null
+      this.nome = null
+      this.celular = null
+      this.senha = null
+      this.confirmarSenha = null
+    },
+    submit () {
+      switch (this.modo) {
+        case 'login':
+          this.confirmarSenha = this.senha
+          break
+      }
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        console.log('ERRO!!!', this.$v)
+        return
+      }
+      console.log('FOI!')
+      switch (this.modo) {
+        case 'login':
+          this.confirmarSenha = this.senha
+          this.logar()
+          break
+        case 'cadastro':
+          this.cadastrar()
+          break
+      }
     },
     async logar () {
       var config = {
-        headers: { Accept: '*/*' }
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'multipart/form-data'
+        }
       }
 
       this.token = await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/oauth/token', { headers: config }, {
@@ -54,7 +108,9 @@ export default {
         username: this.cpf,
         password: this.senha
       }).then((response) => {
-        return response || []
+        localStorage.setItem('token', JSON.stringify(response))
+        this.$root.$emit('updateUser')
+        return response || {}
       }).catch((err) => {
         this.$q.notify({
           color: 'negative',
@@ -87,6 +143,8 @@ export default {
         celular: null,
         cpf: null,
         senha: null
+      }).then(() => {
+        this.logar()
       }).catch((err) => {
         this.$q.notify({
           color: 'negative',

@@ -106,7 +106,8 @@ cfg.module.rules.push({
       plugins: [
         'Dialog',
         'LocalStorage',
-        'SessionStorage'
+        'SessionStorage',
+        'Notify'
       ]
     },
 
