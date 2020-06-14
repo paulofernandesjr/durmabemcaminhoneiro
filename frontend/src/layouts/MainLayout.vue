@@ -43,6 +43,7 @@
           clickable
           tag="a"
           to="/"
+          exact
           v-if="this.$route.path !== '/'"
         >
           <q-item-section avatar >
@@ -58,6 +59,7 @@
           clickable
           tag="a"
           to="/sobre"
+          exact
         >
           <q-item-section avatar >
             <q-icon name="favorite" />
