@@ -7,25 +7,24 @@
             Confirmar Reserva
           </div>
           <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
-            R$ 50
+            R$ {{ booking.valor_estadia }}
           </div>
         </div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
         <div class="text-subtitle1">
-          $・Italian, Cafe
+          {{ booking.nome }}
         </div>
         <div class="text-caption text-grey">
-          Small plates, salads & sandwiches in an intimate setting.
+          {{ booking.rodovia}}, KM {{ booking.km }}, {{ booking.cidade_nome }}/{{ booking.estado_uf }}
         </div>
       </q-card-section>
 
       <q-separator />
 
       <q-card-actions align="right">
-        <q-btn v-close-popup color="primary" flat icon="monetization_on" label="usar créditos" />
-        <q-btn v-close-popup color="primary" flat icon="credit_card" label="usar cartão" />
+        <q-btn v-close-popup color="primary" flat icon="monetization_on" label="usar créditos" @click="addReserva()" />
       </q-card-actions>
     </q-card>
   </div>
@@ -34,9 +33,39 @@
 <script>
 export default {
   name: 'Booking',
-  props: ['booking'],
+  props: ['booking', 'token', 'checkin', 'checkout'],
   data () {
     return {}
+  },
+  methods: {
+    async addReserva () {
+      const checkinAmericano = this.$moment(this.checkin, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm')
+      const checkoutAmericano = this.$moment(this.checkout, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm')
+
+      var config = {
+        Authorization: `${this.token.token_type} ${this.token.access_token}`
+      }
+
+      const resultado = await this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/reservas/' + this.booking.uuid, {
+        data_chegada_em: checkinAmericano,
+        data_saida_em: checkoutAmericano
+      }, { headers: config }).then((response) => {
+        this.$root.$emit('updateReservas')
+
+        return true
+      }).catch((err) => {
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Erro ao reservar um local ' + err,
+          icon: 'report_problem'
+        })
+
+        return false
+      })
+
+      return resultado
+    }
   }
 }
 </script>

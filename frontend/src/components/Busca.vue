@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-dialog v-model="showReserva">
-      <Login v-if="!isAuthenticated" token="token" />
-      <Booking v-if="isAuthenticated" />
+      <Login v-if="!isAuthenticated" />
+      <Booking v-if="isAuthenticated" :booking="booking" :token="getToken" :checkin="checkin" :checkout="checkout" />
     </q-dialog>
     <q-card class="q-mb-sm" v-if="!showResult">
       <q-card-section class="q-pb-none">
@@ -204,7 +204,7 @@
               <!-- <q-item-label class="full-width q-mt-sm text-subtitle2" v-if="item.vagas_disponiveis">{{ item.vagas_disponiveis > 0 ? item.vagas_disponiveis : 'nenhuma' }} {{ item.vagas_disponiveis > 1 ? 'vagas' : 'vaga' }} {{ item.vagas_disponiveis > 1 ? 'disponíveis' : 'disponível' }}</q-item-label> -->
             </q-item-section>
             <q-item-section side top v-if="item.aceita_reserva">
-              <q-btn label="reservar" @click="showDialog(item.uuid)" rounded color="primary" :disabled="item.vagas_disponiveis === 0" />
+              <q-btn label="reservar" @click="showDialog(item)" rounded color="primary" :disabled="item.vagas_disponiveis === 0" />
             </q-item-section>
           </q-item>
           <q-separator spaced inset />
@@ -352,6 +352,7 @@ export default {
       checkin: null,
       checkout: null,
       localEscolhido: null,
+      booking: null,
       optionsRodovia: stringRodovias,
       optionsSentido: stringSentido,
       optionsEstados: stringEstados,
@@ -463,27 +464,8 @@ export default {
       this.checkin = null
       this.checkout = null
     },
-    addReserva () {
-      var config = {
-        Authorization: `${this.token.token_type} ${this.token.access_token}` // @TODO: Colocar Token de acesso
-      }
-
-      // TODO: chamar Axios para reserva
-      this.$axios.post('https://api.durmabemcaminhoneiro.com.br/api/reservas/' + this.localEscolhido, { headers: config }, {
-        data_chegada_em: this.checkin,
-        data_saida_em: this.checkout
-      }).then((response) => {
-        return response || {}
-      }).catch((err) => {
-        this.$q.notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Erro ao reservar um local ' + err,
-          icon: 'report_problem'
-        })
-      })
-    },
-    showDialog (uuid) {
+    showDialog (booking) {
+      this.booking = booking
       this.showReserva = true
     },
     filterFn (val, update, abort) {
